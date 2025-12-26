@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manuale NotebookLM – IIS Mendel Villa Cortese</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Palette -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mendel: {
+              green: "#365314",
+              earth: "#854D0E",
+              light: "#F8FAF5",
+              slate: "#1E293B",
+              accent: "#166534"
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: light; }
+    body { background:#F8FAF5; color:#1E293B; }
+    .glass-header { background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
+    .chart-container { position: relative; width: 100%; max-width: 620px; margin: 0 auto; height: 360px; }
+
+    /* Cards */
+    .instruction-box {
+      background:#fff;
+      border:1px solid #eef2f7;
+      border-radius: 2.5rem;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
+      padding: 2rem;
+    }
+    .soft-card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #eef2f7;
+      border-radius: 2rem;
+      padding: 1.25rem;
+      box-shadow: 0 10px 24px rgba(2,6,23,0.04);
+    }
+    .prompt-card {
+      background:#fff;
+      border:1px solid #eef2f7;
+      border-left-width: 4px;
+      border-radius: 1.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 24px rgba(2, 6, 23, 0.04);
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    .prompt-card:hover { box-shadow: 0 14px 34px rgba(2, 6, 23, 0.08); transform: translateY(-2px); }
+
+    .category-title {
+      display:flex; align-items:center; gap:.75rem;
+      font-size: 1.5rem; font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      color:#0f172a;
+    }
+
+    /* Badges */
+    .step-badge{
+      width: 42px; height: 42px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.125rem;
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(2, 6, 23, 0.12);
+      flex: 0 0 auto;
+    }
+    .kpi {
+      display:inline-flex; align-items:center; gap:.5rem;
+      border:1px solid #eef2f7; background:#fff;
+      padding:.75rem 1rem; border-radius: 1.25rem;
+      font-weight: 800; font-size: .9rem;
+      box-shadow: 0 10px 18px rgba(2,6,23,0.04);
+    }
+    .pill {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.5rem .9rem; border-radius:9999px;
+      border:1px solid #e2e8f0; background:#fff;
+      font-weight: 900; font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color:#0f172a;
+      white-space: nowrap;
+    }
+
+    /* Accordion */
+    details { border-radius: 1.5rem; background:#fff; border:1px solid #eef2f7; box-shadow:0 10px 22px rgba(2,6,23,0.04); }
+    details > summary { cursor:pointer; list-style:none; padding: 1.1rem 1.25rem; font-weight: 900; }
+    details > summary::-webkit-details-marker { display:none; }
+    details[open] > summary { border-bottom:1px solid #eef2f7; }
+    .details-body { padding: 1.15rem 1.25rem 1.25rem; color:#334155; }
+
+    /* Copy blocks */
+    .copywrap { position: relative; }
+    .copybtn {
+      position: absolute; top: 14px; right: 14px;
+      border:1px solid #e2e8f0; background:#fff;
+      border-radius: 9999px;
+      padding: .45rem .75rem;
+      font-weight: 900; font-size: .72rem;
+      text-transform: uppercase; letter-spacing: .12em;
+      display:inline-flex; align-items:center; gap:.45rem;
+      color:#0f172a;
+      box-shadow: 0 10px 18px rgba(2,6,23,0.04);
+    }
+    .copybtn:hover { background:#f8fafc; }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-radius: 1.5rem;
+      border: 1px solid #e2e8f0;
+      background: #0b1220;
+      color: #e5e7eb;
+      padding: 1.1rem 1.1rem 1.1rem;
+      font-size: .9rem;
+      line-height: 1.35rem;
+      overflow: hidden;
+    }
+
+    /* Anchor offset for sticky nav */
+    .anchor { scroll-margin-top: 110px; }
+
+    /* === ADD: Sidebar Index (desktop) === */
+    .sidebar {
+      position: fixed;
+      right: 22px;
+      top: 118px;
+      width: 290px;
+      z-index: 40;
+      display: none;
+    }
+    @media (min-width: 1280px) { .sidebar { display: block; } }
+    .sidebar-card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid #eef2f7;
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px rgba(2,6,23,0.06);
+      padding: 1.25rem;
+      backdrop-filter: blur(10px);
+    }
+    .sidebar a {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: .65rem .8rem;
+      border-radius: 1.2rem;
+      border: 1px solid transparent;
+      font-weight: 900;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: #0f172a;
+      transition: background .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .sidebar a:hover {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      transform: translateX(-2px);
+    }
+    .sidebar a.active {
+      background: rgba(54, 83, 20, 0.10);
+      border-color: rgba(54, 83, 20, 0.35);
+      color: #365314;
+    }
+    .sidebar small {
+      font-size: .7rem;
+      color: #64748b;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    /* === ADD: Back-to-top button === */
+    #toTop {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      display: none;
+      border: 1px solid #e2e8f0;
+      background: rgba(255,255,255,0.92);
+      border-radius: 9999px;
+      padding: .85rem 1rem;
+      font-weight: 900;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      box-shadow: 0 14px 30px rgba(2,6,23,0.10);
+      backdrop-filter: blur(10px);
+      color: #0f172a;
+    }
+    #toTop:hover { background:#fff; }
+  </style>
+</head>
+
+<body class="font-sans antialiased">
+
+  <!-- NAV -->
+  <nav class="glass-header border-b border-slate-200 sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
+      <div class="flex items-center space-x-4">
+        <div class="bg-mendel-green p-2.5 rounded-2xl text-white shadow-xl shadow-green-900/20">
+          <i class="fa-solid fa-leaf text-2xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-black uppercase tracking-tighter leading-none text-slate-900">
+            Mendel <span class="text-mendel-green">NotebookLM</span>
+          </h1>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+            Manuale operativo per docenti
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+        <a href="#intro" class="pill"><i class="fa-solid fa-compass"></i> Introduzione</a>
+        <a href="#materiali" class="pill"><i class="fa-solid fa-folder-open"></i> Materiali</a>
+        <a href="#primo-uso" class="pill"><i class="fa-solid fa-rocket"></i> Primo uso</a>
+        <a href="#interfaccia" class="pill"><i class="fa-solid fa-window-maximize"></i> Schermata</a>
+        <a href="#zona-studio" class="pill"><i class="fa-solid fa-graduation-cap"></i> Zona studio</a>
+        <a href="#template-prompt" class="pill"><i class="fa-solid fa-terminal"></i> Template</a>
+        <a href="#prompt" class="pill"><i class="fa-solid fa-bolt"></i> Materie</a>
+        <a href="#ricette" class="pill"><i class="fa-solid fa-utensils"></i> Esempi didattici</a>
+        <a href="#errori" class="pill"><i class="fa-solid fa-triangle-exclamation"></i> Problemi</a>
+        <a href="#inclusione" class="pill"><i class="fa-solid fa-universal-access"></i> Inclusione</a>
+        <a href="#privacy" class="pill"><i class="fa-solid fa-shield-halved"></i> Privacy</a>
+
+        <a href="https://notebooklm.google.com" target="_blank"
+           class="bg-mendel-green text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-mendel-accent transition-all shadow-lg">
+          Accedi ora <i class="fa-solid fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- === ADD: Floating Sidebar (desktop only) === -->
+  <aside class="sidebar" aria-label="Indice rapido">
+    <div class="sidebar-card">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Indice rapido</p>
+          <p class="text-sm font-black tracking-tight text-slate-900">Navigazione corso</p>
+        </div>
+        <span class="pill" style="padding:.35rem .7rem; font-size:.68rem;">
+          <i class="fa-solid fa-location-dot"></i> Attivo
+        </span>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="#intro" data-spy="intro"><span>Introduzione</span><small>01</small></a>
+        <a href="#materiali" data-spy="materiali"><span>Materiali del corso</span><small>02</small></a>
+        <a href="#primo-uso" data-spy="primo-uso"><span>Primo uso</span><small>03</small></a>
+        <a href="#interfaccia" data-spy="interfaccia"><span>Schermata</span><small>04</small></a>
+        <a href="#zona-studio" data-spy="zona-studio"><span>Zona studio</span><small>05</small></a>
+        <a href="#template-prompt" data-spy="template-prompt"><span>Template prompt</span><small>06</small></a>
+        <a href="#prompt" data-spy="prompt"><span>Prompt per materie</span><small>07</small></a>
+        <a href="#ricette" data-spy="ricette"><span>Esempi didattici</span><small>08</small></a>
+        <a href="#errori" data-spy="errori"><span>Problemi</span><small>09</small></a>
+        <a href="#inclusione" data-spy="inclusione"><span>Inclusione</span><small>10</small></a>
+        <a href="#privacy" data-spy="privacy"><span>Privacy</span><small>11</small></a>
+      </nav>
+
+      <div class="mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+        <p class="text-xs text-slate-600 font-extrabold">
+          Suggerimento: durante la formazione usa l’indice per saltare rapidamente tra le fasi (Primo uso → Schermata → Zona studio).
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- === ADD: Back-to-top button === -->
+  <button id="toTop" type="button" aria-label="Torna su">
+    <i class="fa-solid fa-arrow-up mr-2"></i> Torna su
+  </button>
+
+  <main class="container mx-auto px-6 py-12 max-w-7xl">
+
+    <!-- HERO -->
+    <section class="mb-14 grid lg:grid-cols-2 gap-16 items-center">
+      <div class="space-y-7">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-green-100 text-mendel-green rounded-full text-[10px] font-black uppercase tracking-widest">
+          <i class="fa-solid fa-star"></i>
+          <span>Formazione interna docenti • PTOF 2025/2026</span>
+        </div>
+
+        <h2 class="text-5xl md:text-6xl font-black text-slate-900 leading-[0.95] tracking-tighter">
+          L’AI che studia <br><span class="text-mendel-green italic">sui tuoi materiali.</span>
+        </h2>
+
+        <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
+          NotebookLM non è un oracolo che inventa risposte. È un assistente che lavora
+          <strong>solo</strong> su PDF, dispense, link e video che carichi tu. Le risposte sono
+          <strong>ancorate alle fonti</strong> e verificabili.
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <span class="kpi"><i class="fa-solid fa-check text-green-600"></i> Controllo del docente</span>
+          <span class="kpi"><i class="fa-solid fa-quote-left text-blue-600"></i> Citazioni e fonti</span>
+          <span class="kpi"><i class="fa-solid fa-shield-halved text-slate-700"></i> Uso sicuro a scuola</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-10 rounded-[3.5rem] shadow-2xl border border-slate-100">
+        <h4 class="text-center font-black text-slate-400 text-[10px] uppercase mb-8 tracking-[0.2em]">
+          Competenze potenziate (valori indicativi)
+        </h4>
+        <div class="chart-container">
+          <canvas id="impactChart"></canvas>
+        </div>
+        <p class="text-center text-xs text-slate-400 mt-6">
+          Grafico orientativo: l’impatto reale dipende dalla qualità delle fonti caricate e dalle spunte selezionate.
+        </p>
+      </div>
+    </section>
+
+    <!-- INTRO (ESTESA) -->
+    <section id="intro" class="anchor mb-20">
+      <div class="text-center mb-12">
+        <h3 class="text-4xl font-black tracking-tighter">Introduzione (per docenti alle prime armi)</h3>
+        <p class="text-slate-500 mt-2 italic">
+          Cosa fa, cosa non fa, e cosa puoi ottenere subito come docente.
+        </p>
+      </div>
+<!-- Screenshot interfaccia NotebookLM -->
+<div class="my-12 flex justify-center">
+  <figure class="max-w-5xl w-full">
+  <img 
+  src="Schermata NotebookLM.png"
+  alt="Interfaccia iniziale di NotebookLM: fonti, chat e zona studio"
+  class="rounded-3xl border border-slate-200 shadow-xl cursor-zoom-in"
+  onclick="openZoom(this.src)"
+>
+
+    <figcaption class="mt-4 text-center text-sm text-slate-500 italic">
+      Schermata iniziale di NotebookLM: a sinistra le <strong>Fonti</strong>, al centro la <strong>Chat</strong>,
+      a destra la <strong>Zona Studio</strong>.
+    </figcaption>
+  </figure>
+</div>
+<!-- GUIDA AGGIORNATA PASSO PASSO -->
+<section class="max-w-5xl mx-auto my-20">
+  <div class="bg-white rounded-[3rem] border border-slate-200 shadow-xl p-10 space-y-8">
+
+    <div class="text-center">
+      <h3 class="text-3xl font-black tracking-tighter">
+        Guida aggiornata passo passo
+      </h3>
+      <p class="text-slate-500 italic mt-2">
+        Dal primo accesso alle funzioni più avanzate, con le novità più recenti
+      </p>
+    </div>
+
+    <div class="text-slate-700 leading-relaxed space-y-6 text-sm">
+
+      <p>
+        Immagina NotebookLM come una <strong>“lavatrice intelligente”</strong>:  
+        tu inserisci i panni sporchi (documenti grezzi, appunti, idee),
+        scegli il programma (riassunto, slide, video)  
+        e l’AI ti restituisce il bucato pulito e stirato
+        (contenuti ordinati, pronti e utilizzabili).
+      </p>
+
+      <h4 class="font-black text-lg">1. Accesso e creazione del notebook</h4>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Vai su <strong>notebooklm.google.com</strong></li>
+        <li>Clicca su <strong>“Nuovo notebook”</strong></li>
+        <li>
+          NotebookLM risponde <strong>solo</strong> alle fonti che inserisci tu:
+          questo elimina le “allucinazioni” e crea un perimetro informativo sicuro.
+        </li>
+      </ul>
+
+      <h4 class="font-black text-lg">2. Gestione delle fonti (caricare e cercare)</h4>
+      <p>
+        Oggi NotebookLM non serve solo per caricare documenti,
+        ma anche per <strong>trovarli</strong>.
+      </p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Caricamento classico: PDF, testo copiato, siti web, video YouTube</li>
+        <li>
+          Ricerca nel Drive: puoi chiedere di trovare automaticamente
+          tutti i file su un certo argomento nel tuo Google Drive
+        </li>
+        <li>
+          Deep Research (web): se non hai materiali,
+          NotebookLM può cercare sul web, analizzare centinaia di fonti
+          e creare un report che diventa la tua fonte principale
+        </li>
+      </ul>
+
+      <h4 class="font-black text-lg">3. Strategia avanzata: fatti scrivere il prompt</h4>
+      <p>
+        Una delle funzioni più potenti è usare NotebookLM
+        per <strong>scrivere le istruzioni per se stesso</strong>.
+      </p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Chiedi: <em>“Crea un prompt dettagliato per realizzare slide per…”</em></li>
+        <li>Copia il prompt generato</li>
+        <li>Usalo per creare il contenuto finale</li>
+      </ul>
+
+      <h4 class="font-black text-lg">4. Trasformare i documenti in contenuti</h4>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <strong>Presentazioni</strong>: slide complete, con lingua e pubblico personalizzabili
+        </li>
+        <li>
+          <strong>Video overview</strong>: due host virtuali che spiegano i contenuti
+        </li>
+        <li>
+          <strong>Audio overview</strong>: discussioni tipo podcast per ripasso
+        </li>
+        <li>
+          <strong>Mappe concettuali e infografiche</strong>:
+          strumenti visivi per studio e inclusione
+        </li>
+      </ul>
+
+      <h4 class="font-black text-lg">5. Condivisione: chatbot personalizzato</h4>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Puoi condividere il notebook in modalità “visualizzatore”</li>
+        <li>
+          Chi riceve il link può fare domande,
+          ma non vede i file originali
+        </li>
+        <li>
+          È come creare un assistente esperto sui tuoi materiali
+        </li>
+      </ul>
+
+      <h4 class="font-black text-lg">6. App mobile e studio in movimento</h4>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>App NotebookLM per iOS e Android</li>
+        <li>Flashcard e quiz automatici</li>
+        <li>Studio e ripasso anche fuori dall’aula</li>
+      </ul>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+        <p class="font-black mb-2">In sintesi</p>
+        <ol class="list-decimal pl-6 space-y-1">
+          <li>Carichi le fonti</li>
+          <li>Scegli il “detersivo” (prompt)</li>
+          <li>Avvii il programma (slide, video, mappe…)</li>
+          <li>Ottieni un risultato pulito e pronto all’uso</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="instruction-box border-t-8 border-mendel-green">
+            <div class="flex items-start gap-4">
+              <div class="step-badge" style="background:#365314;">A</div>
+              <div>
+                <h4 class="text-2xl font-black tracking-tighter">NotebookLM in una frase</h4>
+                <p class="text-slate-600 mt-2 leading-relaxed">
+                  È un assistente didattico che <strong>legge e studia i materiali che già usi</strong> (PDF, dispense, link, video)
+                  e li trasforma in <strong>strumenti pronti</strong>: sintesi, mappe, FAQ, guide allo studio, domande e verifiche.
+                </p>
+
+                <div class="mt-5 grid md:grid-cols-2 gap-4">
+                  <div class="soft-card">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Cosa NON è</p>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-600 mt-1"></i> Non è un motore di ricerca</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-600 mt-1"></i> Non naviga su Internet</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-600 mt-1"></i> Non aggiunge conoscenze esterne</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-600 mt-1"></i> Se non è nelle fonti, non può usarlo</li>
+                    </ul>
+                  </div>
+                  <div class="soft-card">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Perché è ideale a scuola</p>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-700 mt-1"></i> Risposte verificabili (citazioni)</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-700 mt-1"></i> Controllo totale (spunte)</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-700 mt-1"></i> Strumenti inclusivi in pochi click</li>
+                      <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-700 mt-1"></i> Risparmio tempo senza perdere qualità</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="mt-6 p-5 rounded-3xl bg-slate-50 border border-slate-200">
+                  <p class="text-sm font-black text-slate-900 mb-2">Come lavora sempre (sequenza)</p>
+                  <ol class="text-sm text-slate-600 space-y-1 list-decimal list-inside">
+                    <li>Tu carichi i materiali (fonti)</li>
+                    <li>Tu selezioni le fonti attive (spunte)</li>
+                    <li>Tu chiedi (chat) oppure scegli una funzione (zona studio)</li>
+                    <li>L’AI produce output <strong>solo</strong> da quelle fonti</li>
+                  </ol>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="instruction-box border-t-8 border-blue-600">
+            <div class="flex items-start gap-4">
+              <div class="step-badge" style="background:#2563eb;">B</div>
+              <div>
+                <h4 class="text-2xl font-black tracking-tighter">Cosa puoi farci come docente (subito)</h4>
+                <p class="text-slate-600 mt-2 leading-relaxed">
+                  NotebookLM ti aiuta soprattutto in quattro aree: <strong>preparazione</strong>, <strong>verifica</strong>,
+                  <strong>inclusione</strong>, <strong>metodo di studio</strong>.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4 mt-5">
+                  <div class="soft-card">
+                    <p class="font-black text-slate-900"><i class="fa-solid fa-wand-magic-sparkles text-blue-600 mr-2"></i>Preparazione lezioni</p>
+                    <ul class="text-sm text-slate-600 mt-2 space-y-1">
+                      <li>• sintesi dei capitoli</li>
+                      <li>• scalette per spiegazione</li>
+                      <li>• glossari (anche bilingui)</li>
+                      <li>• definizioni ed esempi dalle fonti</li>
+                    </ul>
+                  </div>
+                  <div class="soft-card">
+                    <p class="font-black text-slate-900"><i class="fa-solid fa-list-check text-purple-600 mr-2"></i>Verifiche</p>
+                    <ul class="text-sm text-slate-600 mt-2 space-y-1">
+                      <li>• domande con soluzioni</li>
+                      <li>• esercizi graduati</li>
+                      <li>• varianti di verifica</li>
+                      <li>• riferimenti a pagina/paragrafo</li>
+                    </ul>
+                  </div>
+                  <div class="soft-card">
+                    <p class="font-black text-slate-900"><i class="fa-solid fa-universal-access text-green-700 mr-2"></i>Inclusione BES/DSA</p>
+                    <ul class="text-sm text-slate-600 mt-2 space-y-1">
+                      <li>• semplificazioni</li>
+                      <li>• mappe e infografiche</li>
+                      <li>• guide allo studio</li>
+                      <li>• domande progressive</li>
+                    </ul>
+                  </div>
+                  <div class="soft-card">
+                    <p class="font-black text-slate-900"><i class="fa-solid fa-brain text-orange-600 mr-2"></i>Metodo di studio</p>
+                    <ul class="text-sm text-slate-600 mt-2 space-y-1">
+                      <li>• overview per orientarsi</li>
+                      <li>• FAQ per ripasso attivo</li>
+                      <li>• percorsi di studio (priorità)</li>
+                      <li>• supporto allo studio autonomo</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="mt-6 p-5 rounded-3xl bg-blue-50 border border-blue-200">
+                  <p class="text-sm font-black text-slate-900 mb-2">Regola d’oro</p>
+                  <p class="text-sm text-slate-700">
+                    La qualità dipende dalle <strong>fonti</strong> e dalle <strong>spunte</strong>.
+                    Meno fonti (ma mirate) = risultati più precisi e più utili.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="instruction-box border-t-8 border-slate-900 bg-slate-900 text-white">
+            <h4 class="text-2xl font-black tracking-tighter">Mini-guida: “Cosa carico?”</h4>
+            <p class="text-slate-300 mt-2 text-sm leading-relaxed">
+              Parti semplice: un solo PDF breve. Poi aggiungi fonti gradualmente.
+            </p>
+
+            <div class="mt-5 space-y-3">
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-1">Scelta consigliata #1</p>
+                <p class="text-sm text-slate-200">Un capitolo/dispensa su ciò che insegni la prossima settimana.</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-1">Scelta consigliata #2</p>
+                <p class="text-sm text-slate-200">Una verifica dell’anno scorso (per crearne varianti coerenti).</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-1">Scelta consigliata #3</p>
+                <p class="text-sm text-slate-200">Un articolo tecnico o un link che vuoi “rendere didattico”.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="instruction-box border-t-8 border-mendel-earth">
+            <h4 class="text-2xl font-black tracking-tighter">ChatGPT vs NotebookLM (in pratica)</h4>
+            <div class="overflow-x-auto mt-4">
+              <table class="w-full text-sm border-separate" style="border-spacing:0;">
+                <thead>
+                  <tr>
+                    <th class="text-left p-3 bg-slate-50 border border-slate-200 rounded-tl-2xl">ChatGPT</th>
+                    <th class="text-left p-3 bg-slate-50 border border-slate-200 rounded-tr-2xl">NotebookLM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-3 border border-slate-200 text-slate-600">Conoscenza generale</td>
+                    <td class="p-3 border border-slate-200 text-slate-600">Solo fonti caricate</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 border border-slate-200 text-slate-600">Può sbagliare/inventare</td>
+                    <td class="p-3 border border-slate-200 text-slate-600">Risposte ancorate alle fonti</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 border border-slate-200 text-slate-600">Utile per idee</td>
+                    <td class="p-3 border border-slate-200 text-slate-600">Utile per studio e didattica</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 border border-slate-200 text-slate-600 rounded-bl-2xl">Meno verificabile</td>
+                    <td class="p-3 border border-slate-200 text-slate-600 rounded-br-2xl">Citazioni + controllo (spunte)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-xs text-slate-400 mt-4">
+              Obiettivo del corso: usare NotebookLM come strumento didattico controllabile e ripetibile.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === ADD: MATERIALI DEL CORSO === -->
+    <section id="materiali" class="anchor mb-24">
+      <div class="text-center mb-12">
+        <h3 class="text-4xl font-black tracking-tighter">Materiali del corso (pronti per la prova guidata)</h3>
+        <p class="text-slate-500 mt-2 italic">Link e fonti starter: così tutti partono senza perdere tempo.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="instruction-box border-t-8 border-mendel-green">
+            <div class="flex items-start gap-4">
+              <div class="step-badge" style="background:#365314;"><i class="fa-solid fa-folder-open"></i></div>
+              <div class="w-full">
+                <h4 class="text-2xl font-black tracking-tighter">Cartella corso</h4>
+                <p class="text-slate-600 mt-2 text-sm leading-relaxed">
+                  Inserisci qui i link ai materiali che userai durante la formazione (Drive/OneDrive, slide, PDF esempio).
+                  L’idea: <strong>tutti scaricano lo stesso PDF</strong>, così l’esercitazione è sincronizzata.
+                </p>
+
+                <div class="mt-5 grid md:grid-cols-2 gap-4">
+                  <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400">Slide corso</p>
+                    <p class="font-black mt-1 text-slate-900"><i class="fa-solid fa-chalkboard-user text-mendel-green mr-2"></i>Presentazione</p>
+                    <p class="text-xs text-slate-500 mt-1">Sostituisci “#” con il link.</p>
+                  </a>
+                  <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400">PDF starter</p>
+                    <p class="font-black mt-1 text-slate-900"><i class="fa-solid fa-file-pdf text-red-600 mr-2"></i>Documento per prova</p>
+                    <p class="text-xs text-slate-500 mt-1">2–5 pagine, testo selezionabile.</p>
+                  </a>
+                  <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400">Checklist</p>
+                    <p class="font-black mt-1 text-slate-900"><i class="fa-solid fa-list-check text-blue-600 mr-2"></i>Sequenza 5 minuti</p>
+                    <p class="text-xs text-slate-500 mt-1">Stampa o invia in chat ai colleghi.</p>
+                  </a>
+                  <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
+                    <p class="text-xs font-black uppercase tracking-widest text-slate-400">Esempio YouTube</p>
+                    <p class="font-black mt-1 text-slate-900"><i class="fa-brands fa-youtube text-red-600 mr-2"></i>Video “test”</p>
+                    <p class="text-xs text-slate-500 mt-1">Link utile da incollare in NotebookLM.</p>
+                  </a>
+                </div>
+
+                <div class="mt-6 p-5 rounded-3xl bg-green-50 border border-green-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Suggerimento “anti-panico”</p>
+                  <p class="text-sm text-slate-700">
+                    Prepara un PDF “facile” (testo chiaro) e un PDF “difficile” (più lungo): durante il corso fai vedere
+                    come cambiano i risultati quando si spuntano troppe fonti.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="instruction-box border-t-8 border-blue-600">
+            <h4 class="text-2xl font-black tracking-tighter">Pacchetto fonti consigliato (per demo)</h4>
+            <ul class="text-sm text-slate-700 mt-3 space-y-2">
+              <li>• 1 PDF breve (base)</li>
+              <li>• 1 PDF medio (approfondimento)</li>
+              <li>• 1 link a pagina web (articolo tecnico)</li>
+              <li>• 1 video YouTube (10–15 minuti)</li>
+            </ul>
+            <p class="text-xs text-slate-400 mt-4">
+              Con questo pacchetto puoi mostrare: spunte, citazioni, Zona Studio e differenze tra fonti.
+            </p>
+          </div>
+
+          <div class="instruction-box border-t-8 border-slate-900">
+            <h4 class="text-2xl font-black tracking-tighter">Mini-script per avvio corso</h4>
+            <div class="copywrap mt-4">
+              <button class="copybtn" type="button" data-copy="script1">
+                <i class="fa-solid fa-copy"></i> Copia
+              </button>
+              <pre id="script1">"Oggi useremo NotebookLM come strumento didattico: carichiamo 1 PDF comune, spuntiamo solo quello, generiamo Overview e Mappa, poi creiamo una verifica con soluzioni e citazioni. L’obiettivo non è ‘fare l’AI’, ma risparmiare tempo mantenendo controllo e qualità."</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIMO UTILIZZO IN 5 MINUTI -->
+    <section id="primo-uso" class="anchor mb-24">
+      <div class="text-center mb-12">
+        <h3 class="text-4xl font-black tracking-tighter">Primo utilizzo in 5 minuti</h3>
+        <p class="text-slate-500 mt-2">Una sequenza semplice che funziona sempre (senza stress).</p>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="instruction-box text-center border-t-8 border-mendel-green">
+          <div class="step-badge mx-auto mb-4" style="background:#365314;">1</div>
+          <p class="font-black">Carica 1 PDF breve</p>
+          <p class="text-sm text-slate-600 mt-2">2–5 pagine, contenuto chiaro.</p>
+        </div>
+        <div class="instruction-box text-center border-t-8 border-blue-600">
+          <div class="step-badge mx-auto mb-4" style="background:#2563eb;">2</div>
+          <p class="font-black">Spunta solo quel PDF</p>
+          <p class="text-sm text-slate-600 mt-2">Riduce confusione e migliora precisione.</p>
+        </div>
+        <div class="instruction-box text-center border-t-8 border-mendel-earth">
+          <div class="step-badge mx-auto mb-4" style="background:#854D0E;">3</div>
+          <p class="font-black">Apri Zona Studio</p>
+          <p class="text-sm text-slate-600 mt-2">Parti dagli strumenti automatici.</p>
+        </div>
+        <div class="instruction-box text-center border-t-8 border-slate-900">
+          <div class="step-badge mx-auto mb-4" style="background:#0f172a;">4</div>
+          <p class="font-black">Genera Overview</p>
+          <p class="text-sm text-slate-600 mt-2">Ti orienta subito sul contenuto.</p>
+        </div>
+        <div class="instruction-box text-center border-t-8 border-green-700">
+          <div class="step-badge mx-auto mb-4" style="background:#15803d;">5</div>
+          <p class="font-black">Mappa + FAQ</p>
+          <p class="text-sm text-slate-600 mt-2">Pronte per ripasso e inclusione.</p>
+        </div>
+      </div>
+
+      <div class="instruction-box mt-8 border-t-8 border-blue-600">
+        <div class="flex items-start gap-4">
+          <div class="step-badge" style="background:#2563eb;"><i class="fa-solid fa-clipboard"></i></div>
+          <div class="w-full">
+            <p class="font-black">Prompt pronto (copia e incolla)</p>
+            <p class="text-slate-600 text-sm mt-1">Usalo in chat dopo la Zona Studio, con il PDF spuntato.</p>
+
+            <div class="copywrap mt-4">
+              <button class="copybtn" type="button" data-copy="p1">
+                <i class="fa-solid fa-copy"></i> Copia
+              </button>
+              <pre id="p1">"Riassumi questo materiale in 10 punti chiave per studenti di terza, usando frasi brevi e citando le fonti."</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERFACCIA -->
+    <section id="interfaccia" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">1. Com’è fatta la schermata (spiegata passo-passo)</h3>
+        <p class="text-slate-500 mt-2 italic">Tre zone. Se capisci queste, sai usare NotebookLM.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- FONTI -->
+        <div class="instruction-box border-t-8 border-red-500">
+          <div class="step-badge mb-6" style="background:#ef4444;">1</div>
+          <h4 class="text-xl font-black mb-4 uppercase leading-tight">
+            Colonna sinistra:<br><span class="text-slate-400">Le Fonti</span>
+          </h4>
+          <p class="text-sm text-slate-600 mb-6">
+            È la <strong>biblioteca</strong>: qui carichi i materiali. Senza fonti, l’assistente non può lavorare.
+          </p>
+
+          <ul class="space-y-4 text-xs font-bold text-slate-500">
+            <li class="flex items-start">
+              <i class="fa-solid fa-circle-plus text-red-500 mr-3 mt-1"></i>
+              <span><strong>+ Sorgente</strong>: carica PDF, link, contenuti web, video.</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-check-double text-red-500 mr-3 mt-1"></i>
+              <span><strong>Spunte</strong>: scegli quali documenti usare adesso (controllo totale).</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-brands fa-youtube text-red-600 mr-3 mt-1"></i>
+              <span><strong>YouTube</strong>: incolla un link: l’AI trasforma il video in testo analizzabile.</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 p-4 rounded-2xl bg-red-50 border border-red-200">
+            <p class="text-xs font-black uppercase tracking-widest text-red-600 mb-2">Trucco docente</p>
+            <p class="text-sm text-slate-700">
+              Spunta <strong>solo</strong> le fonti davvero utili per quella lezione o verifica.
+              Meno fonti = risposta più centrata.
+            </p>
+          </div>
+        </div>
+
+        <!-- CHAT -->
+        <div class="instruction-box border-t-8 border-blue-500">
+          <div class="step-badge mb-6" style="background:#3b82f6;">2</div>
+          <h4 class="text-xl font-black mb-4 uppercase leading-tight">
+            Zona centrale:<br><span class="text-slate-400">La Chat</span>
+          </h4>
+          <p class="text-sm text-slate-600 mb-6">
+            Qui fai richieste, ottieni risposte e controlli le citazioni.
+          </p>
+
+          <ul class="space-y-4 text-xs font-bold text-slate-500">
+            <li class="flex items-start">
+              <i class="fa-solid fa-keyboard text-blue-500 mr-3 mt-1"></i>
+              <span><strong>Barra messaggi</strong>: scrivi richieste semplici (es. “Fai una verifica”).</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-quote-left text-blue-500 mr-3 mt-1"></i>
+              <span><strong>Citazioni [1]</strong>: clicca i numeri per vedere la fonte nel documento.</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-thumbtack text-blue-500 mr-3 mt-1"></i>
+              <span><strong>Salva nota</strong>: conserva output utili (UDA, sintesi, scalette, esercizi).</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 p-4 rounded-2xl bg-blue-50 border border-blue-200">
+            <p class="text-xs font-black uppercase tracking-widest text-blue-600 mb-2">Regola di qualità</p>
+            <p class="text-sm text-slate-700">
+              Se la risposta è generica: riduci le fonti spuntate oppure chiedi un output più specifico (tabella, elenco, livelli).
+            </p>
+          </div>
+        </div>
+
+        <!-- ZONA STUDIO -->
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <div class="step-badge mb-6" style="background:#365314;">3</div>
+          <h4 class="text-xl font-black mb-4 uppercase leading-tight">
+            In alto / destra:<br><span class="text-slate-400">Zona Studio</span>
+          </h4>
+          <p class="text-sm text-slate-600 mb-6">
+            Qui NotebookLM produce strumenti didattici automaticamente, partendo dalle fonti spuntate.
+          </p>
+
+          <ul class="space-y-4 text-xs font-bold text-slate-500">
+            <li class="flex items-start">
+              <i class="fa-solid fa-layer-group text-mendel-green mr-3 mt-1"></i>
+              <span><strong>Overview</strong>: panoramica ragionata dei contenuti (orientamento).</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-sitemap text-mendel-green mr-3 mt-1"></i>
+              <span><strong>Mappa concettuale</strong>: concetti e relazioni (molto utile per DSA).</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-chart-simple text-mendel-green mr-3 mt-1"></i>
+              <span><strong>Infografica</strong>: sintesi strutturata e leggibile rapidamente.</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-question-circle text-mendel-green mr-3 mt-1"></i>
+              <span><strong>FAQ</strong>: domande frequenti automatiche (ripasso attivo).</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-book-open text-mendel-green mr-3 mt-1"></i>
+              <span><strong>Guida allo studio</strong>: percorso step-by-step con priorità.</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 p-4 rounded-2xl bg-green-50 border border-green-200">
+            <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Idea chiave</p>
+            <p class="text-sm text-slate-700">
+              Inizia dalla Zona Studio (orientamento e struttura), poi passa alla Chat (produzione di esercizi/verifiche).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONA STUDIO (dettaglio) -->
+    <section id="zona-studio" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Zona Studio: spiegazione completa di ogni funzione</h3>
+        <p class="text-slate-500 mt-2">
+          Qui NotebookLM trasforma le fonti in strumenti didattici. Ogni funzione è pensata per scuola, ripasso e inclusione.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-7 space-y-4">
+
+          <details open>
+            <summary class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-3">
+                <span class="step-badge" style="background:#0f172a;">1</span>
+                OVERVIEW (Panoramica generale)
+              </span>
+              <i class="fa-solid fa-chevron-down text-slate-400"></i>
+            </summary>
+            <div class="details-body">
+              <p class="text-sm leading-relaxed">
+                L’<strong>Overview</strong> è una panoramica ragionata dell’intero materiale selezionato.
+                Non è un “riassunto corto”: serve per capire <strong>di cosa parla</strong> il materiale
+                e <strong>com’è organizzato</strong>.
+              </p>
+
+              <div class="mt-4 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">A cosa serve al docente</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• capire rapidamente un PDF lungo</li>
+                    <li>• decidere cosa spiegare e cosa tagliare</li>
+                    <li>• costruire un’introduzione alla lezione</li>
+                    <li>• individuare concetti essenziali</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Valore didattico</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• utile per studenti che “si perdono”</li>
+                    <li>• base per pre-lettura guidata</li>
+                    <li>• orientamento per compiti e ripasso</li>
+                    <li>• supporto per UDA interdisciplinari</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white border border-white/10">
+                <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Esempio pratico</p>
+                <p class="text-sm text-slate-200">
+                  “Uso l’Overview per presentare i nuclei tematici, poi entro nel dettaglio con la spiegazione.”
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-3">
+                <span class="step-badge" style="background:#365314;">2</span>
+                MAPPA CONCETTUALE
+              </span>
+              <i class="fa-solid fa-chevron-down text-slate-400"></i>
+            </summary>
+            <div class="details-body">
+              <p class="text-sm leading-relaxed">
+                La <strong>Mappa concettuale</strong> riorganizza i contenuti evidenziando
+                <strong>concetti</strong> e <strong>relazioni</strong> (cause-effetti, sequenze, gerarchie).
+                È uno strumento chiave per rendere visibile la struttura del testo.
+              </p>
+
+              <div class="mt-4 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-green-50 border border-green-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">A cosa serve al docente</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• impostare una spiegazione chiara</li>
+                    <li>• preparare interrogazioni e orali</li>
+                    <li>• individuare nodi critici</li>
+                    <li>• costruire mappe personalizzate</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-green-50 border border-green-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Inclusione</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• riduce il carico cognitivo</li>
+                    <li>• facilita memorizzazione</li>
+                    <li>• migliora lo studio autonomo</li>
+                    <li>• utile per DSA/BES</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-2xl bg-white border border-slate-200">
+                <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Suggerimento operativo</p>
+                <p class="text-sm text-slate-700">
+                  Se la mappa è troppo lunga: togli spunta alle fonti secondarie oppure lavora su un solo paragrafo alla volta.
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-3">
+                <span class="step-badge" style="background:#166534;">3</span>
+                INFOGRAFICA (Sintesi visiva strutturata)
+              </span>
+              <i class="fa-solid fa-chevron-down text-slate-400"></i>
+            </summary>
+            <div class="details-body">
+              <p class="text-sm leading-relaxed">
+                L’<strong>Infografica</strong> è una sintesi organizzata in blocchi chiari e leggibili rapidamente.
+                Non è “una bella immagine”: è una <strong>struttura informativa</strong> pronta da copiare in slide o schede.
+              </p>
+
+              <div class="mt-4 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-emerald-700 mb-2">A cosa serve al docente</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• creare la “slide finale” di riepilogo</li>
+                    <li>• produrre schede di ripasso</li>
+                    <li>• rendere accessibile un testo denso</li>
+                    <li>• preparare compiti di studio</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-emerald-700 mb-2">Valore per studenti</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• focus su concetti chiave</li>
+                    <li>• ripasso rapido</li>
+                    <li>• utile prima di una verifica</li>
+                    <li>• supporto alla comprensione</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Uso consigliato</p>
+                <p class="text-sm text-slate-700">
+                  Prima infografica (visione d’insieme), poi lezione (approfondimento), infine FAQ (ripasso attivo).
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-3">
+                <span class="step-badge" style="background:#2563eb;">4</span>
+                FAQ (Domande frequenti automatiche)
+              </span>
+              <i class="fa-solid fa-chevron-down text-slate-400"></i>
+            </summary>
+            <div class="details-body">
+              <p class="text-sm leading-relaxed">
+                La funzione <strong>FAQ</strong> genera domande tipiche sull’argomento, con risposte basate sulle fonti.
+                È perfetta per <strong>ripasso attivo</strong>, recupero e interrogazioni.
+              </p>
+
+              <div class="mt-4 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-blue-700 mb-2">A cosa serve al docente</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• preparare interrogazioni</li>
+                    <li>• creare esercizi di comprensione</li>
+                    <li>• anticipare difficoltà</li>
+                    <li>• attività di ripasso</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-blue-700 mb-2">Valore didattico</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• stimola metacognizione</li>
+                    <li>• riduce ansia (studio guidato)</li>
+                    <li>• migliora partecipazione</li>
+                    <li>• ottimo per lavoro a coppie</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-2xl bg-white border border-slate-200">
+                <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Modalità pronta per la classe</p>
+                <p class="text-sm text-slate-700">
+                  Proietta le FAQ: prima rispondono gli studenti, poi confrontate con l’output e la citazione.
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-3">
+                <span class="step-badge" style="background:#7c3aed;">5</span>
+                GUIDA ALLO STUDIO (Percorso step-by-step)
+              </span>
+              <i class="fa-solid fa-chevron-down text-slate-400"></i>
+            </summary>
+            <div class="details-body">
+              <p class="text-sm leading-relaxed">
+                La <strong>Guida allo studio</strong> organizza il materiale in un percorso: cosa studiare prima, cosa dopo,
+                su cosa concentrarsi. È un supporto concreto per studenti che non sanno “da dove partire”.
+              </p>
+
+              <div class="mt-4 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-purple-700 mb-2">A cosa serve al docente</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• recupero e rinforzo</li>
+                    <li>• studio estivo / sospensioni</li>
+                    <li>• metodo di studio (UDA)</li>
+                    <li>• differenziazione (base/avanzato)</li>
+                  </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
+                  <p class="text-xs font-black uppercase tracking-widest text-purple-700 mb-2">Per studenti BES/DSA</p>
+                  <ul class="text-sm text-slate-700 space-y-1">
+                    <li>• riduce disorientamento</li>
+                    <li>• crea routine di studio</li>
+                    <li>• facilita autonomia</li>
+                    <li>• aiuta gestione tempi e priorità</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white border border-white/10">
+                <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Uso docente consigliato</p>
+                <p class="text-sm text-slate-200">
+                  Personalizza la guida: aggiungi “cosa chiederò all’interrogazione” e “errori tipici da evitare”.
+                </p>
+              </div>
+            </div>
+          </details>
+
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="instruction-box border-t-8 border-mendel-green">
+            <h4 class="text-2xl font-black tracking-tighter">Cosa ottieni (in pratica)</h4>
+            <p class="text-slate-600 mt-2 text-sm leading-relaxed">
+              La Zona Studio è la scorciatoia per trasformare un PDF in strumenti didattici senza scrivere prompt complessi.
+            </p>
+
+            <div class="mt-5 space-y-3">
+              <div class="p-4 rounded-2xl bg-green-50 border border-green-200">
+                <p class="text-sm font-black text-slate-900">
+                  <i class="fa-solid fa-stopwatch text-mendel-green mr-2"></i>Risparmio tempo
+                </p>
+                <p class="text-sm text-slate-700 mt-1">
+                  Overview + Infografica = base lezione pronta più velocemente.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                <p class="text-sm font-black text-slate-900">
+                  <i class="fa-solid fa-person-chalkboard text-blue-700 mr-2"></i>Didattica più chiara
+                </p>
+                <p class="text-sm text-slate-700 mt-1">
+                  Mappa concettuale = struttura visibile, soprattutto per classi deboli.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
+                <p class="text-sm font-black text-slate-900">
+                  <i class="fa-solid fa-universal-access text-purple-700 mr-2"></i>Inclusione
+                </p>
+                <p class="text-sm text-slate-700 mt-1">
+                  FAQ + Guida allo studio = supporto concreto per BES/DSA e metodo di studio.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="instruction-box border-t-8 border-orange-600">
+            <h4 class="text-2xl font-black tracking-tighter">Checklist rapida (prima prova)</h4>
+            <ol class="mt-4 text-sm text-slate-700 space-y-2 list-decimal list-inside">
+              <li>Carica 1 PDF breve (2–5 pagine)</li>
+              <li>Spunta solo quel PDF</li>
+              <li>Zona Studio → Overview</li>
+              <li>Zona Studio → Mappa concettuale</li>
+              <li>Zona Studio → FAQ</li>
+              <li>Zona Studio → Guida allo studio</li>
+              <li>Chat → verifica o esercizi con citazioni</li>
+            </ol>
+            <p class="text-xs text-slate-400 mt-4">
+              Questa sequenza riduce la complessità e aumenta la qualità dei risultati.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEMPLATE PROMPT UNIVERSALI -->
+    <section id="template-prompt" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Template prompt universali (3 livelli)</h3>
+        <p class="text-slate-500 mt-2">Da copiare e incollare in chat. Cambia solo argomento/obiettivo.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="instruction-box border-t-8 border-slate-900">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#0f172a;">Base</div>
+            <div class="w-full">
+              <p class="font-black">Sintesi chiara + parole chiave</p>
+              <p class="text-sm text-slate-600 mt-1">Perfetta per spiegare e ripassare.</p>
+              <div class="copywrap mt-4">
+                <button class="copybtn" type="button" data-copy="pb">
+                  <i class="fa-solid fa-copy"></i> Copia
+                </button>
+                <pre id="pb">"Riassumi le fonti spuntate in 8–12 punti chiave. Poi crea un elenco di 10 parole chiave con definizione breve, citando le fonti."</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-blue-600">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#2563eb;">Medio</div>
+            <div class="w-full">
+              <p class="font-black">Quiz con soluzioni + citazioni</p>
+              <p class="text-sm text-slate-600 mt-1">Pronto per verifica formativa.</p>
+              <div class="copywrap mt-4">
+                <button class="copybtn" type="button" data-copy="pm">
+                  <i class="fa-solid fa-copy"></i> Copia
+                </button>
+                <pre id="pm">"Genera un quiz su queste fonti: 8 domande a risposta multipla + 4 vero/falso. Fornisci soluzioni e, per ogni risposta, cita la fonte (pagina/paragrafo se presente)."</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#365314;">Avanz.</div>
+            <div class="w-full">
+              <p class="font-black">UDA / compito autentico + rubric</p>
+              <p class="text-sm text-slate-600 mt-1">Per progettazione didattica strutturata.</p>
+              <div class="copywrap mt-4">
+                <button class="copybtn" type="button" data-copy="pa">
+                  <i class="fa-solid fa-copy"></i> Copia
+                </button>
+                <pre id="pa">"Progetta un’attività (compito autentico) basata solo su queste fonti: obiettivi, consegna, fasi, materiali, tempi, prodotto finale. Includi una rubrica di valutazione (4 livelli) e cita le fonti usate."</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRONTUARIO PROMPT PER MATERIA -->
+    <section id="prompt" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">2. Prontuario prompt per materia</h3>
+        <p class="text-slate-500 mt-2">Basato sulla programmazione PTOF dell’IIS Mendel. Copia e incolla nella chat.</p>
+      </div>
+
+      <!-- Linguaggi -->
+      <div class="mb-12">
+        <h4 class="category-title"><i class="fa-solid fa-language text-blue-600"></i> Area Linguaggi</h4>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="prompt-card" style="border-left-color:#3b82f6;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Italiano</p>
+            <p class="text-sm italic">"Analizza il tema della natura in Pascoli usando i testi caricati e confrontalo con il realismo agricolo di Verga."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#3b82f6;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Inglese Tecnico</p>
+            <p class="text-sm italic">"Create a bilingual (EN-IT) vocabulary list focused on 'Hydroponic Cultivation' based on the PDF manual."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#3b82f6;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Storia</p>
+            <p class="text-sm italic">"Estrai i passaggi chiave della meccanizzazione agricola nel dopoguerra italiano citati nelle mie dispense."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scientifico -->
+      <div class="mb-12">
+        <h4 class="category-title"><i class="fa-solid fa-flask-vial text-purple-600"></i> Area Scientifico-Matematica</h4>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="prompt-card" style="border-left-color:#a855f7;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Matematica</p>
+            <p class="text-sm italic">"Estrai i dati presenti nelle fonti e crea 5 esercizi (con soluzioni) su medie, percentuali e grafici."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#a855f7;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Chimica Agraria</p>
+            <p class="text-sm italic">"Spiega l'influenza del pH sulla biodisponibilità dell'azoto nel terreno basandoti sulle fonti spuntate, in forma semplificata per BES."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#a855f7;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Biologia / Fisica</p>
+            <p class="text-sm italic">"Sintetizza le fasi della fotosintesi in una tabella: 'fase' e 'cosa succede', citando le fonti."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tecnico Agraria -->
+      <div class="mb-12">
+        <h4 class="category-title"><i class="fa-solid fa-wheat-awn text-mendel-green"></i> Area Tecnico-Agraria</h4>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="prompt-card" style="border-left-color:#365314;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Agronomia / Veg</p>
+            <p class="text-sm italic text-xs">"Sintetizza i protocolli presenti nelle fonti in 5 punti chiave e crea 5 domande di verifica."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#365314;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Zootecnia / Anim</p>
+            <p class="text-sm italic text-xs">"Elenca segnali di benessere/malessere citati nelle fonti e proponi una scheda di osservazione per gli studenti."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#365314;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Estimo / Diritto</p>
+            <p class="text-sm italic text-xs">"Crea una guida alla stima sintetica basandoti sui criteri presenti nelle fonti spuntate, con esempio."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#365314;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Genio / TTRG</p>
+            <p class="text-sm italic text-xs">"Estrai i parametri tecnici e trasformali in checklist operativa (con citazioni)."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professionale -->
+      <div class="mb-12">
+        <h4 class="category-title"><i class="fa-solid fa-briefcase text-orange-600"></i> Professionale (quinte)</h4>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="prompt-card" style="border-left-color:#f97316;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Valorizzazione Prodotti</p>
+            <p class="text-sm italic">"Riassumi le certificazioni citate nelle fonti e crea 8 domande vero/falso con correzione e citazioni."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#f97316;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Ecologia / Pedologia</p>
+            <p class="text-sm italic">"Organizza in tabella: 'tecnica', 'vantaggi', 'limiti' basandoti sulle fonti spuntate."</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#f97316;">
+            <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Trasformazione</p>
+            <p class="text-sm italic">"Spiega le fasi del processo dalle fonti e genera una verifica: 6 multiple + 4 aperte, con soluzioni e citazioni."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trasversali -->
+      <div class="mb-12">
+        <h4 class="category-title"><i class="fa-solid fa-star-of-life text-red-600"></i> PCTO / Civica</h4>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="prompt-card" style="border-left-color:#dc2626; background:#fef2f2;">
+            <p class="text-[10px] font-black text-red-600 mb-2 uppercase">PCTO / Relazione</p>
+            <p class="text-sm font-bold mb-2 text-slate-900 italic">
+              "Analizza i diari di bordo caricati e scrivi un report sintetico delle competenze acquisite, con esempi e citazioni."
+            </p>
+            <p class="text-[10px] text-slate-400">Ideale per relazione finale ed Esame di Stato.</p>
+          </div>
+          <div class="prompt-card" style="border-left-color:#16a34a; background:#f0fdf4;">
+            <p class="text-[10px] font-black text-green-600 mb-2 uppercase">Educazione Civica</p>
+            <p class="text-sm font-bold mb-2 text-slate-900 italic">
+              "Collega sostenibilità e normative presenti nelle fonti, creando 3 domande per un debate e 1 compito autentico."
+            </p>
+            <p class="text-[10px] text-slate-400">Perfetto per UDA trasversali.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RICETTE DIDATTICHE PRONTE -->
+    <section id="ricette" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Ricette didattiche pronte (zero improvvisazione)</h3>
+        <p class="text-slate-500 mt-2">Ogni ricetta: obiettivo → fonti → Zona Studio → prompt chat.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="instruction-box border-t-8 border-blue-600">
+          <p class="text-xs font-black uppercase tracking-widest text-blue-700 mb-2">Esempio 1</p>
+          <h4 class="text-2xl font-black tracking-tighter">Lezione pronta in 20 minuti</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li><strong>Obiettivo:</strong> spiegazione chiara + schema finale</li>
+            <li><strong>Fonti:</strong> 1 capitolo PDF (spuntato)</li>
+            <li><strong>Zona Studio:</strong> Overview → Infografica</li>
+            <li><strong>Chat:</strong> scaletta + esempi</li>
+          </ul>
+          <div class="copywrap mt-4">
+            <button class="copybtn" type="button" data-copy="r1"><i class="fa-solid fa-copy"></i> Copia</button>
+            <pre id="r1">"Crea una scaletta di lezione (10–12 minuti spiegazione + 8 minuti attività + 3 minuti verifica rapida) basandoti SOLO sulle fonti spuntate. Includi esempi e citazioni."</pre>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-purple-600">
+          <p class="text-xs font-black uppercase tracking-widest text-purple-700 mb-2">Esempio 2</p>
+          <h4 class="text-2xl font-black tracking-tighter">Verifica pronta con correzione</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li><strong>Obiettivo:</strong> verifica coerente con fonti</li>
+            <li><strong>Fonti:</strong> capitolo + eventuale scheda (spuntati)</li>
+            <li><strong>Zona Studio:</strong> FAQ (per vedere le domande “tipiche”)</li>
+            <li><strong>Chat:</strong> quiz + soluzioni</li>
+          </ul>
+          <div class="copywrap mt-4">
+            <button class="copybtn" type="button" data-copy="r2"><i class="fa-solid fa-copy"></i> Copia</button>
+            <pre id="r2">"Genera una verifica su queste fonti: 8 multiple + 4 brevi aperte. Fornisci soluzioni e, per ogni risposta, indica la citazione (pagina/paragrafo se presente)."</pre>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Esempio 3</p>
+          <h4 class="text-2xl font-black tracking-tighter">Inclusione BES/DSA (pacchetto completo)</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li><strong>Obiettivo:</strong> semplificazione + guida studio</li>
+            <li><strong>Fonti:</strong> porzione di capitolo (spuntata)</li>
+            <li><strong>Zona Studio:</strong> Mappa → Guida allo studio</li>
+            <li><strong>Chat:</strong> versione semplificata + domande graduali</li>
+          </ul>
+          <div class="copywrap mt-4">
+            <button class="copybtn" type="button" data-copy="r3"><i class="fa-solid fa-copy"></i> Copia</button>
+            <pre id="r3">"Riformula questo contenuto in versione semplificata (frasi brevi). Poi crea: 10 parole chiave con definizione + 10 domande graduate (facili→medie) con soluzioni e citazioni."</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ERRORI TIPICI + SOLUZIONI -->
+    <section id="errori" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Problemi comuni e soluzioni immediate</h3>
+        <p class="text-slate-500 mt-2">Prima di pensare “non funziona”, controlla questi 4 punti.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="instruction-box border-t-8 border-red-600">
+          <h4 class="text-2xl font-black tracking-tighter">Risposte troppo generiche</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• riduci le fonti spuntate</li>
+            <li>• chiedi un formato (tabella / elenco / livelli)</li>
+            <li>• restringi l’argomento (capitolo/paragrafo)</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box border-t-8 border-orange-600">
+          <h4 class="text-2xl font-black tracking-tighter">Citazioni assenti o poco chiare</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• verifica che il PDF sia testo selezionabile (non scansione)</li>
+            <li>• prova a caricare una versione “testo” del documento</li>
+            <li>• limita le fonti e riprova</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box border-t-8 border-blue-600">
+          <h4 class="text-2xl font-black tracking-tighter">Risultati confusi / contraddittori</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• hai fonti diverse con definizioni diverse: separale</li>
+            <li>• lavora “a blocchi”: una fonte alla volta</li>
+            <li>• usa prima Overview per capire cosa c’è dentro</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <h4 class="text-2xl font-black tracking-tighter">Troppo tempo perso a “scrivere bene”</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• inizia dalla Zona Studio (output automatici)</li>
+            <li>• usa i template prompt universali</li>
+            <li>• salva le risposte migliori come note riutilizzabili</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCLUSIONE BES/DSA -->
+    <section id="inclusione" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Inclusione BES/DSA: uso operativo</h3>
+        <p class="text-slate-500 mt-2">Strumenti e prompt pronti per ridurre carico cognitivo e aumentare autonomia.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <h4 class="text-2xl font-black tracking-tighter">Pacchetto “studio guidato”</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li><strong>1)</strong> Zona Studio → Overview (orientamento)</li>
+            <li><strong>2)</strong> Zona Studio → Mappa concettuale (struttura)</li>
+            <li><strong>3)</strong> Zona Studio → Guida allo studio (priorità)</li>
+            <li><strong>4)</strong> Chat → semplificazione + domande graduali</li>
+          </ul>
+
+          <div class="copywrap mt-4">
+            <button class="copybtn" type="button" data-copy="bes1"><i class="fa-solid fa-copy"></i> Copia</button>
+            <pre id="bes1">"Crea una versione semplificata del contenuto (frasi brevi, lessico essenziale). Poi produci: (a) elenco parole chiave con definizione, (b) 10 domande di comprensione graduate con soluzioni, (c) mini-scheda di ripasso in 6 punti, citando le fonti."</pre>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-blue-600">
+          <h4 class="text-2xl font-black tracking-tighter">Tre output “didattici” consigliati</h4>
+          <div class="grid gap-4 mt-4">
+            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+              <p class="font-black text-slate-900">1) Tabella a due colonne</p>
+              <p class="text-sm text-slate-700 mt-1">Concetto → spiegazione breve (con esempi).</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+              <p class="font-black text-slate-900">2) Sequenza in 5 passi</p>
+              <p class="text-sm text-slate-700 mt-1">Processi/procedure: “prima… poi… quindi…”.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+              <p class="font-black text-slate-900">3) Domande “facili → medie”</p>
+              <p class="text-sm text-slate-700 mt-1">Costruisce fiducia e metodo, non solo controllo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section id="privacy" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Privacy e buone pratiche (scuola)</h3>
+        <p class="text-slate-500 mt-2">Due regole chiare per lavorare sereni e tutelati.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="instruction-box border-t-8 border-slate-900">
+          <h4 class="text-2xl font-black tracking-tighter">Cosa evitare</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• non caricare dati personali degli studenti (nomi, certificazioni, valutazioni, PEI/PDP, ecc.)</li>
+            <li>• non caricare documenti sensibili non necessari</li>
+            <li>• evitare materiali non autorizzati o con copyright non gestito</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <h4 class="text-2xl font-black tracking-tighter">Cosa preferire</h4>
+          <ul class="text-sm text-slate-700 mt-3 space-y-2">
+            <li>• materiali autoprodotti e documenti di istituto</li>
+            <li>• estratti di testo realmente utili (mirati)</li>
+            <li>• fonti chiare e leggibili (testo selezionabile)</li>
+            <li>• lavorare per “blocchi” (capitoli/argomenti) per migliorare qualità</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHIUSURA -->
+          <p class="text-xs text-slate-400 uppercase font-black tracking-widest">Supporto Tecnico IIS Mendel - Villa Cortese</p>
+      <h4 class="text-2xl font-black">Pronto per iniziare?</h4>
+      <p class="text-slate-500 max-w-lg mx-auto">
+        Parti da un PDF breve, usa la Zona Studio e poi passa alla Chat. Salva le risposte migliori come note: diventano la tua “cassetta degli attrezzi” didattica.
+      </p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-white py-16 border-t border-mendel-green/30">
+    <div class="container mx-auto px-6 text-center">
+      <div class="flex justify-center mb-8">
+        <div class="bg-mendel-green p-4 rounded-3xl text-white">
+          <i class="fa-solid fa-graduation-cap text-4xl"></i>
+        </div>
+      </div>
+      <p class="text-xl font-black uppercase tracking-widest mb-2">IIS Gregorio Mendel</p>
+      <p class="text-xs text-slate-500 uppercase font-bold tracking-[0.3em] mb-8">Villa Cortese - Milano</p>
+      <div class="h-px bg-white/10 w-24 mx-auto mb-8"></div>
+      <p class="text-xs text-slate-400">Guida realizzata da Massimiliano Crespi</p>
+    </div>
+  </footer>
+
+  <!-- JS: Chart + Copy buttons + ScrollSpy + BackToTop -->
+  <script>
+    // Radar chart + Copy buttons
+    window.addEventListener("load", () => {
+      const canvas = document.getElementById("impactChart");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        new Chart(ctx, {
+          type: "radar",
+          data: {
+            labels: ["Sintesi Documenti", "Analisi Fonti", "Inclusione BES/DSA", "Velocità Preparazione", "Supporto Studenti", "Qualità Verifiche"],
+            datasets: [{
+              label: "Impatto NotebookLM",
+              data: [95, 85, 90, 100, 80, 95],
+              backgroundColor: "rgba(54, 83, 20, 0.18)",
+              borderColor: "#365314",
+              borderWidth: 3,
+              pointBackgroundColor: "#365314",
+              pointBorderColor: "#ffffff",
+              pointHoverBackgroundColor: "#ffffff",
+              pointHoverBorderColor: "#365314"
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0, max: 100, beginAtZero: true,
+                angleLines: { display: false },
+                ticks: { display: false, stepSize: 20 },
+                grid: { color: "#e2e8f0" }
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      const buttons = document.querySelectorAll("[data-copy]");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-copy");
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.innerText;
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiato';
+            setTimeout(() => (btn.innerHTML = old), 1200);
+          } catch (e) {
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            btn.innerHTML = '<i class="fa-solid fa-info-circle"></i> Selezionato';
+            setTimeout(() => (btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copia'), 1200);
+          }
+        });
+      });
+
+      // === ScrollSpy (sidebar) ===
+      const spyLinks = Array.from(document.querySelectorAll('.sidebar a[data-spy]'));
+      const sectionIds = spyLinks.map(a => a.getAttribute('data-spy'));
+      const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+      function setActive(id) {
+        spyLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('data-spy') === id);
+        });
+      }
+
+      // Use IntersectionObserver when available
+      if ('IntersectionObserver' in window && sections.length) {
+        const io = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter(e => e.isIntersecting)
+            .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (visible && visible.target && visible.target.id) setActive(visible.target.id);
+        }, { root: null, threshold: [0.15, 0.25, 0.35, 0.5] });
+
+        sections.forEach(s => io.observe(s));
+      } else {
+        // Fallback: on scroll
+        window.addEventListener('scroll', () => {
+          const y = window.scrollY + 140;
+          let current = sections[0]?.id;
+          for (const s of sections) {
+            if (s.offsetTop <= y) current = s.id;
+          }
+          if (current) setActive(current);
+        }, { passive: true });
+      }
+
+      // Smooth scroll for sidebar links
+      spyLinks.forEach(a => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('data-spy');
+          const target = document.getElementById(id);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // === Back to top button ===
+      const toTop = document.getElementById('toTop');
+      function toggleToTop() {
+        if (!toTop) return;
+        toTop.style.display = (window.scrollY > 700) ? 'inline-flex' : 'none';
+      }
+      toggleToTop();
+      window.addEventListener('scroll', toggleToTop, { passive: true });
+
+      if (toTop) {
+        toTop.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+<!-- MODALE ZOOM IMMAGINE -->
+<div id="imgZoomModal"
+     class="fixed inset-0 bg-black/90 hidden z-[9999] flex items-center justify-center p-4"
+     onclick="closeZoom()">
+
+  <img id="imgZoom"
+       class="max-w-[95vw] max-h-[95vh] rounded-2xl shadow-2xl border border-white/20 cursor-zoom-out"
+       onclick="closeZoom(); event.stopPropagation()"
+
+</div>
+
+<script>
+  // Funzioni GLOBALI (devono stare su window per funzionare con onclick="")
+  window.openZoom = function(src) {
+    const modal = document.getElementById('imgZoomModal');
+    const img = document.getElementById('imgZoom');
+    if (!modal || !img) return;
+
+    img.src = src;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.closeZoom = function() {
+    const modal = document.getElementById('imgZoomModal');
+    if (!modal) return;
+
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  // Chiudi con ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') window.closeZoom();
+  });
+</script>
+
+
+</body>
+</html>
