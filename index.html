@@ -503,6 +503,7 @@
         <a href="#interfaccia" class="pill"><i class="fa-solid fa-window-maximize"></i> Schermata</a>
         <a href="#zona-studio" class="pill"><i class="fa-solid fa-graduation-cap"></i> Zona studio</a>
         <a href="#presentazioni" class="pill"><i class="fa-solid fa-desktop"></i> Presentazioni</a>
+        <a href="#tabella-dati" class="pill"><i class="fa-solid fa-table-cells"></i> Tabella dati</a>
         <a href="#template-prompt" class="pill"><i class="fa-solid fa-terminal"></i> Template</a>
         <a href="#prompt" class="pill"><i class="fa-solid fa-bolt"></i> Materie</a>
         <a href="#ricette" class="pill"><i class="fa-solid fa-utensils"></i> Esempi didattici</a>
@@ -538,12 +539,13 @@
         <a href="#interfaccia" data-spy="interfaccia"><span>Schermata</span><small>05</small></a>
         <a href="#zona-studio" data-spy="zona-studio"><span>Zona studio</span><small>06</small></a>
         <a href="#presentazioni" data-spy="presentazioni"><span>Creare presentazioni</span><small>07</small></a>
-        <a href="#template-prompt" data-spy="template-prompt"><span>Template prompt</span><small>08</small></a>
-        <a href="#prompt" data-spy="prompt"><span>Prompt per materie</span><small>09</small></a>
-        <a href="#ricette" data-spy="ricette"><span>Esempi didattici</span><small>10</small></a>
-        <a href="#errori" data-spy="errori"><span>Problemi</span><small>11</small></a>
-        <a href="#inclusione" data-spy="inclusione"><span>Inclusione</span><small>12</small></a>
-        <a href="#privacy" data-spy="privacy"><span>Privacy</span><small>13</small></a>
+        <a href="#tabella-dati" data-spy="tabella-dati"><span>Tabella dati</span><small>08</small></a>
+        <a href="#template-prompt" data-spy="template-prompt"><span>Template prompt</span><small>09</small></a>
+        <a href="#prompt" data-spy="prompt"><span>Prompt per materie</span><small>10</small></a>
+        <a href="#ricette" data-spy="ricette"><span>Esempi didattici</span><small>11</small></a>
+        <a href="#errori" data-spy="errori"><span>Problemi</span><small>12</small></a>
+        <a href="#inclusione" data-spy="inclusione"><span>Inclusione</span><small>13</small></a>
+        <a href="#privacy" data-spy="privacy"><span>Privacy</span><small>14</small></a>
       </nav>
 
       <div class="mt-4 p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200">
@@ -604,6 +606,21 @@
           Cosa fa, cosa non fa, e cosa puoi ottenere subito come docente.
         </p>
       </div>
+
+<div class="my-12 flex justify-center">
+  <figure class="max-w-5xl w-full">
+    <img 
+      src="Schermata NotebookLM.png"
+      alt="Interfaccia iniziale di NotebookLM: fonti, chat e zona studio"
+      class="rounded-3xl border border-slate-200 shadow-xl cursor-zoom-in transition-all hover:shadow-2xl"
+      onclick="openZoom(this.src)"
+    >
+    <figcaption class="mt-4 text-center text-sm text-slate-500 italic">
+      Schermata iniziale di NotebookLM: a sinistra le <strong>Fonti</strong>, al centro la <strong>Chat</strong>,
+      a destra la <strong>Zona Studio</strong>.
+    </figcaption>
+  </figure>
+</div>
 
 <section class="max-w-5xl mx-auto my-20">
   <div class="instruction-box border-t-8 border-mendel-green">
@@ -1192,6 +1209,10 @@
               <i class="fa-solid fa-book-open text-mendel-green mr-3 mt-1"></i>
               <span><strong>Guida allo studio</strong>: percorso step-by-step con priorità.</span>
             </li>
+            <li class="flex items-start">
+              <i class="fa-solid fa-table-cells text-mendel-green mr-3 mt-1"></i>
+              <span><strong>Tabella Dati</strong>: estrae informazioni sparse e le organizza in tabelle strutturate.</span>
+            </li>
           </ul>
 
           <div class="mt-6 p-4 rounded-2xl bg-green-50 border border-green-200">
@@ -1574,6 +1595,101 @@
       </div>
     </section>
 
+    <section id="tabella-dati" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Funzione "Tabella Dati"</h3>
+        <p class="text-slate-500 mt-2">Trasforma informazioni sparse in dati strutturati e organizzati</p>
+      </div>
+
+      <div class="max-w-5xl mx-auto">
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background: linear-gradient(135deg, #365314 0%, #22c55e 100%);"><i class="fa-solid fa-table-cells"></i></div>
+            <div>
+              <h4 class="text-2xl font-black tracking-tighter mb-4">Cos'è e a cosa serve</h4>
+              <p class="text-slate-700 leading-relaxed mb-6">
+                La funzione <strong>"Tabella Dati"</strong> (o estrazione di Dati Strutturati) in NotebookLM serve a trasformare informazioni discorsive, sparse o disordinate presenti nei documenti caricati in un formato logico, visivo e organizzato a righe e colonne.
+              </p>
+
+              <h5 class="text-xl font-black tracking-tight mb-4 text-slate-900">Utilità principali:</h5>
+
+              <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="soft-card">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <i class="fa-solid fa-search text-blue-600"></i>
+                    </div>
+                    <div>
+                      <p class="font-black text-slate-900 mb-1">1. Estrazione mirata</p>
+                      <p class="text-sm text-slate-600">
+                        Permette di isolare dati specifici nascosti all'interno di documenti molto lunghi (come manuali, normative o lunghe trascrizioni) e di raggrupparli in un'unica vista.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-card">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                      <i class="fa-solid fa-code-compare text-purple-600"></i>
+                    </div>
+                    <div>
+                      <p class="font-black text-slate-900 mb-1">2. Comparazione</p>
+                      <p class="text-sm text-slate-600">
+                        Rende immediato il confronto tra più elementi citati nelle fonti, incrociando variabili diverse (ad esempio, confrontando le caratteristiche di vari elementi, i pro e i contro, o le scadenze temporali).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-card">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                      <i class="fa-solid fa-book text-green-600"></i>
+                    </div>
+                    <div>
+                      <p class="font-black text-slate-900 mb-1">3. Creazione di glossari e schemi</p>
+                      <p class="text-sm text-slate-600">
+                        È lo strumento ideale per generare automaticamente elenchi di termini associati alle relative definizioni, traduzioni o caratteristiche tecniche presenti nel testo.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-card">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                      <i class="fa-solid fa-download text-orange-600"></i>
+                    </div>
+                    <div>
+                      <p class="font-black text-slate-900 mb-1">4. Esportazione</p>
+                      <p class="text-sm text-slate-600">
+                        Produce un output ordinato che risulta pronto per essere copiato e incollato in software per fogli di calcolo, come Google Sheets o Microsoft Excel, per ulteriori elaborazioni.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 p-6 rounded-3xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200">
+                <p class="text-xs font-black uppercase tracking-widest text-blue-700 mb-3"><i class="fa-solid fa-lightbulb mr-2"></i>Come attivarla</p>
+                <p class="text-sm text-slate-700 mb-4">
+                  Per attivarla, è sufficiente formulare la richiesta nel box di chat (prompt) specificando le colonne desiderate.
+                </p>
+                <div class="copywrap">
+                  <button class="copybtn" type="button" data-copy="tabella-esempio">
+                    <i class="fa-solid fa-copy"></i> Copia
+                  </button>
+                  <pre id="tabella-esempio">"Estrai tutte le procedure citate nei documenti e crea una tabella divisa in: Nome procedura, Fasi principali, Strumenti necessari"</pre>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="template-prompt" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Template prompt universali (3 livelli)</h3>
@@ -1924,11 +2040,42 @@
       <p class="text-xl font-black uppercase tracking-widest mb-2">IIS Gregorio Mendel</p>
       <p class="text-xs text-slate-400 uppercase font-bold tracking-[0.3em] mb-8">Villa Cortese - Milano</p>
       <div class="h-px bg-white/10 w-24 mx-auto mb-8"></div>
-      <p class="text-xs text-slate-400">Guida realizzata da Massimiliano Crespi</p>
+      <p class="text-xs text-slate-400">Guida realizzata dal Team Digitale_IIS MENDEL</p>
     </div>
   </footer>
 
+  <div id="imgZoomModal"
+       class="fixed inset-0 bg-black/90 hidden z-[9999] flex items-center justify-center p-4"
+       onclick="closeZoom()">
+    <img id="imgZoom"
+         class="max-w-[95vw] max-h-[95vh] rounded-2xl shadow-2xl border border-white/20 cursor-zoom-out"
+         onclick="closeZoom(); event.stopPropagation()">
+  </div>
+
   <script>
+    // Funzioni zoom immagine
+    window.openZoom = function(src) {
+      const modal = document.getElementById('imgZoomModal');
+      const img = document.getElementById('imgZoom');
+      if (!modal || !img) return;
+
+      img.src = src;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    window.closeZoom = function() {
+      const modal = document.getElementById('imgZoomModal');
+      if (!modal) return;
+
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') window.closeZoom();
+    });
+
     window.addEventListener("load", () => {
       const canvas = document.getElementById("impactChart");
       if (canvas) {
