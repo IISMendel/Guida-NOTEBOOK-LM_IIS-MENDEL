@@ -5,16 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manuale NotebookLM – IIS Mendel Villa Cortese</title>
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-  <!-- Palette -->
   <script>
     tailwind.config = {
       theme: {
@@ -34,115 +28,323 @@
   </script>
 
   <style>
-    :root { color-scheme: light; }
-    body { background:#F8FAF5; color:#1E293B; }
-    .glass-header { background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
-    .chart-container { position: relative; width: 100%; max-width: 620px; margin: 0 auto; height: 360px; }
-
-    /* Cards */
-    .instruction-box {
-      background:#fff;
-      border:1px solid #eef2f7;
-      border-radius: 2.5rem;
-      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
-      padding: 2rem;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+    
+    :root { 
+      color-scheme: light;
     }
+    
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    
+    body { 
+      background: linear-gradient(135deg, #f0fdf4 0%, #dbeafe 50%, #fef3c7 100%);
+      background-attachment: fixed;
+      color:#1E293B;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(54, 83, 20, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    main { position: relative; z-index: 1; }
+    
+    .glass-header { 
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    .chart-container { 
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+      height: 360px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .instruction-box {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: 2.5rem;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .instruction-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    
     .soft-card {
-      background: rgba(255,255,255,0.92);
-      border: 1px solid #eef2f7;
+      background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%);
+      border: 1px solid rgba(226, 232, 240, 0.8);
       border-radius: 2rem;
       padding: 1.25rem;
-      box-shadow: 0 10px 24px rgba(2,6,23,0.04);
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s ease;
     }
+    
+    .soft-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    
     .prompt-card {
-      background:#fff;
-      border:1px solid #eef2f7;
+      background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+      border: 1px solid #eef2f7;
       border-left-width: 4px;
       border-radius: 1.75rem;
       padding: 1.5rem;
-      box-shadow: 0 10px 24px rgba(2, 6, 23, 0.04);
-      transition: box-shadow .2s ease, transform .2s ease;
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
-    .prompt-card:hover { box-shadow: 0 14px 34px rgba(2, 6, 23, 0.08); transform: translateY(-2px); }
+    
+    .prompt-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .prompt-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    
+    .prompt-card:hover::before {
+      opacity: 1;
+    }
 
     .category-title {
-      display:flex; align-items:center; gap:.75rem;
-      font-size: 1.5rem; font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: 1.5rem;
+      font-weight: 900;
       letter-spacing: -0.03em;
       text-transform: uppercase;
       margin-bottom: 1.25rem;
-      color:#0f172a;
+      background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    /* Badges */
-    .step-badge{
-      width: 42px; height: 42px;
+    .step-badge {
+      width: 48px;
+      height: 48px;
       border-radius: 9999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       color: #fff;
-      box-shadow: 0 12px 26px rgba(2, 6, 23, 0.12);
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
       flex: 0 0 auto;
+      transition: all 0.3s ease;
+      position: relative;
     }
+    
+    .step-badge::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .step-badge:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .step-badge:hover::after {
+      opacity: 1;
+    }
+    
     .kpi {
-      display:inline-flex; align-items:center; gap:.5rem;
-      border:1px solid #eef2f7; background:#fff;
-      padding:.75rem 1rem; border-radius: 1.25rem;
-      font-weight: 800; font-size: .9rem;
-      box-shadow: 0 10px 18px rgba(2,6,23,0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      padding: .85rem 1.2rem;
+      border-radius: 1.5rem;
+      font-weight: 800;
+      font-size: .9rem;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s ease;
     }
+    
+    .kpi:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    
     .pill {
-      display:inline-flex; align-items:center; gap:.5rem;
-      padding:.5rem .9rem; border-radius:9999px;
-      border:1px solid #e2e8f0; background:#fff;
-      font-weight: 900; font-size: .75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .6rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      font-weight: 900;
+      font-size: .75rem;
       text-transform: uppercase;
       letter-spacing: .12em;
-      color:#0f172a;
+      color: #0f172a;
       white-space: nowrap;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .pill:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
     }
 
-    /* Accordion */
-    details { border-radius: 1.5rem; background:#fff; border:1px solid #eef2f7; box-shadow:0 10px 22px rgba(2,6,23,0.04); }
-    details > summary { cursor:pointer; list-style:none; padding: 1.1rem 1.25rem; font-weight: 900; }
-    details > summary::-webkit-details-marker { display:none; }
-    details[open] > summary { border-bottom:1px solid #eef2f7; }
-    .details-body { padding: 1.15rem 1.25rem 1.25rem; color:#334155; }
+    details {
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    
+    details:hover {
+      box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    
+    details > summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 1.25rem 1.5rem;
+      font-weight: 900;
+      transition: all 0.3s ease;
+    }
+    
+    details > summary:hover {
+      color: #365314;
+    }
+    
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] > summary { border-bottom: 1px solid rgba(226, 232, 240, 0.5); }
+    .details-body { padding: 1.15rem 1.5rem 1.5rem; color: #334155; }
 
-    /* Copy blocks */
     .copywrap { position: relative; }
     .copybtn {
-      position: absolute; top: 14px; right: 14px;
-      border:1px solid #e2e8f0; background:#fff;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
       border-radius: 9999px;
-      padding: .45rem .75rem;
-      font-weight: 900; font-size: .72rem;
-      text-transform: uppercase; letter-spacing: .12em;
-      display:inline-flex; align-items:center; gap:.45rem;
-      color:#0f172a;
-      box-shadow: 0 10px 18px rgba(2,6,23,0.04);
+      padding: .5rem .85rem;
+      font-weight: 900;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      color: #0f172a;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      transition: all 0.3s ease;
     }
-    .copybtn:hover { background:#f8fafc; }
+    
+    .copybtn:hover {
+      transform: scale(1.05);
+      box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    }
+    
     pre {
       white-space: pre-wrap;
       word-wrap: break-word;
       border-radius: 1.5rem;
-      border: 1px solid #e2e8f0;
-      background: #0b1220;
+      border: 1px solid rgba(30, 41, 59, 0.2);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #e5e7eb;
-      padding: 1.1rem 1.1rem 1.1rem;
+      padding: 1.25rem;
       font-size: .9rem;
-      line-height: 1.35rem;
+      line-height: 1.6;
       overflow: hidden;
+      box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255,255,255,0.1) inset;
     }
 
-    /* Anchor offset for sticky nav */
     .anchor { scroll-margin-top: 110px; }
 
-    /* === ADD: Sidebar Index (desktop) === */
     .sidebar {
       position: fixed;
       right: 22px;
@@ -151,21 +353,26 @@
       z-index: 40;
       display: none;
     }
+    
     @media (min-width: 1280px) { .sidebar { display: block; } }
+    
     .sidebar-card {
-      background: rgba(255,255,255,0.94);
-      border: 1px solid #eef2f7;
+      background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%);
+      border: 1px solid rgba(226, 232, 240, 0.8);
       border-radius: 2rem;
-      box-shadow: 0 12px 28px rgba(2,6,23,0.06);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
       padding: 1.25rem;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(20px) saturate(180%);
     }
+    
     .sidebar a {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      padding: .65rem .8rem;
+      padding: .75rem .9rem;
       border-radius: 1.2rem;
       border: 1px solid transparent;
       font-weight: 900;
@@ -173,18 +380,40 @@
       text-transform: uppercase;
       letter-spacing: .12em;
       color: #0f172a;
-      transition: background .15s ease, border-color .15s ease, transform .15s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .sidebar a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: linear-gradient(90deg, rgba(54, 83, 20, 0.15), transparent);
+      transition: width 0.3s ease;
+    }
+    
     .sidebar a:hover {
-      background: #f8fafc;
-      border-color: #e2e8f0;
-      transform: translateX(-2px);
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-color: rgba(226, 232, 240, 0.8);
+      transform: translateX(-4px);
+      padding-left: 1.2rem;
     }
+    
+    .sidebar a:hover::before {
+      width: 100%;
+    }
+    
     .sidebar a.active {
-      background: rgba(54, 83, 20, 0.10);
-      border-color: rgba(54, 83, 20, 0.35);
+      background: linear-gradient(135deg, rgba(54, 83, 20, 0.15) 0%, rgba(54, 83, 20, 0.08) 100%);
+      border-color: rgba(54, 83, 20, 0.4);
       color: #365314;
+      box-shadow: 0 4px 15px rgba(54, 83, 20, 0.2);
     }
+    
     .sidebar small {
       font-size: .7rem;
       color: #64748b;
@@ -192,41 +421,73 @@
       letter-spacing: .08em;
     }
 
-    /* === ADD: Back-to-top button === */
     #toTop {
       position: fixed;
       right: 18px;
       bottom: 18px;
       z-index: 60;
       display: none;
-      border: 1px solid #e2e8f0;
-      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%);
       border-radius: 9999px;
-      padding: .85rem 1rem;
+      padding: .95rem 1.2rem;
       font-weight: 900;
       font-size: .72rem;
       text-transform: uppercase;
       letter-spacing: .12em;
-      box-shadow: 0 14px 30px rgba(2,6,23,0.10);
-      backdrop-filter: blur(10px);
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      backdrop-filter: blur(20px) saturate(180%);
       color: #0f172a;
+      transition: all 0.3s ease;
     }
-    #toTop:hover { background:#fff; }
+    
+    #toTop:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255,255,255,0.8) inset;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #365314 0%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-badge {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.1) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      box-shadow: 
+        0 8px 25px rgba(34, 197, 94, 0.15),
+        0 0 0 1px rgba(255,255,255,0.3) inset;
+    }
   </style>
 </head>
 
 <body class="font-sans antialiased">
 
-  <!-- NAV -->
-  <nav class="glass-header border-b border-slate-200 sticky top-0 z-50">
+  <nav class="glass-header sticky top-0 z-50">
     <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
       <div class="flex items-center space-x-4">
-        <div class="bg-mendel-green p-2.5 rounded-2xl text-white shadow-xl shadow-green-900/20">
+        <div class="bg-gradient-to-br from-mendel-green to-green-700 p-2.5 rounded-2xl text-white shadow-xl float-animation">
           <i class="fa-solid fa-leaf text-2xl"></i>
         </div>
         <div>
           <h1 class="text-xl font-black uppercase tracking-tighter leading-none text-slate-900">
-            Mendel <span class="text-mendel-green">NotebookLM</span>
+            Mendel <span class="gradient-text">NotebookLM</span>
           </h1>
           <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
             Manuale operativo per docenti
@@ -236,10 +497,12 @@
 
       <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
         <a href="#intro" class="pill"><i class="fa-solid fa-compass"></i> Introduzione</a>
+        <a href="#riassunto" class="pill"><i class="fa-solid fa-table"></i> Riassunto</a>
         <a href="#materiali" class="pill"><i class="fa-solid fa-folder-open"></i> Materiali</a>
         <a href="#primo-uso" class="pill"><i class="fa-solid fa-rocket"></i> Primo uso</a>
         <a href="#interfaccia" class="pill"><i class="fa-solid fa-window-maximize"></i> Schermata</a>
         <a href="#zona-studio" class="pill"><i class="fa-solid fa-graduation-cap"></i> Zona studio</a>
+        <a href="#presentazioni" class="pill"><i class="fa-solid fa-desktop"></i> Presentazioni</a>
         <a href="#template-prompt" class="pill"><i class="fa-solid fa-terminal"></i> Template</a>
         <a href="#prompt" class="pill"><i class="fa-solid fa-bolt"></i> Materie</a>
         <a href="#ricette" class="pill"><i class="fa-solid fa-utensils"></i> Esempi didattici</a>
@@ -248,14 +511,13 @@
         <a href="#privacy" class="pill"><i class="fa-solid fa-shield-halved"></i> Privacy</a>
 
         <a href="https://notebooklm.google.com" target="_blank"
-           class="bg-mendel-green text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:bg-mendel-accent transition-all shadow-lg">
+           class="bg-gradient-to-r from-mendel-green to-green-700 text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:shadow-2xl transition-all shadow-lg hover:scale-105">
           Accedi ora <i class="fa-solid fa-arrow-right ml-2"></i>
         </a>
       </div>
     </div>
   </nav>
 
-  <!-- === ADD: Floating Sidebar (desktop only) === -->
   <aside class="sidebar" aria-label="Indice rapido">
     <div class="sidebar-card">
       <div class="flex items-start justify-between gap-3 mb-3">
@@ -270,43 +532,43 @@
 
       <nav class="space-y-2">
         <a href="#intro" data-spy="intro"><span>Introduzione</span><small>01</small></a>
-        <a href="#materiali" data-spy="materiali"><span>Materiali del corso</span><small>02</small></a>
-        <a href="#primo-uso" data-spy="primo-uso"><span>Primo uso</span><small>03</small></a>
-        <a href="#interfaccia" data-spy="interfaccia"><span>Schermata</span><small>04</small></a>
-        <a href="#zona-studio" data-spy="zona-studio"><span>Zona studio</span><small>05</small></a>
-        <a href="#template-prompt" data-spy="template-prompt"><span>Template prompt</span><small>06</small></a>
-        <a href="#prompt" data-spy="prompt"><span>Prompt per materie</span><small>07</small></a>
-        <a href="#ricette" data-spy="ricette"><span>Esempi didattici</span><small>08</small></a>
-        <a href="#errori" data-spy="errori"><span>Problemi</span><small>09</small></a>
-        <a href="#inclusione" data-spy="inclusione"><span>Inclusione</span><small>10</small></a>
-        <a href="#privacy" data-spy="privacy"><span>Privacy</span><small>11</small></a>
+        <a href="#riassunto" data-spy="riassunto"><span>Tabella riassuntiva</span><small>02</small></a>
+        <a href="#materiali" data-spy="materiali"><span>Materiali del corso</span><small>03</small></a>
+        <a href="#primo-uso" data-spy="primo-uso"><span>Primo uso</span><small>04</small></a>
+        <a href="#interfaccia" data-spy="interfaccia"><span>Schermata</span><small>05</small></a>
+        <a href="#zona-studio" data-spy="zona-studio"><span>Zona studio</span><small>06</small></a>
+        <a href="#presentazioni" data-spy="presentazioni"><span>Creare presentazioni</span><small>07</small></a>
+        <a href="#template-prompt" data-spy="template-prompt"><span>Template prompt</span><small>08</small></a>
+        <a href="#prompt" data-spy="prompt"><span>Prompt per materie</span><small>09</small></a>
+        <a href="#ricette" data-spy="ricette"><span>Esempi didattici</span><small>10</small></a>
+        <a href="#errori" data-spy="errori"><span>Problemi</span><small>11</small></a>
+        <a href="#inclusione" data-spy="inclusione"><span>Inclusione</span><small>12</small></a>
+        <a href="#privacy" data-spy="privacy"><span>Privacy</span><small>13</small></a>
       </nav>
 
-      <div class="mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+      <div class="mt-4 p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200">
         <p class="text-xs text-slate-600 font-extrabold">
-          Suggerimento: durante la formazione usa l’indice per saltare rapidamente tra le fasi (Primo uso → Schermata → Zona studio).
+          💡 Suggerimento: durante la formazione usa l'indice per saltare rapidamente tra le fasi.
         </p>
       </div>
     </div>
   </aside>
 
-  <!-- === ADD: Back-to-top button === -->
   <button id="toTop" type="button" aria-label="Torna su">
     <i class="fa-solid fa-arrow-up mr-2"></i> Torna su
   </button>
 
   <main class="container mx-auto px-6 py-12 max-w-7xl">
 
-    <!-- HERO -->
     <section class="mb-14 grid lg:grid-cols-2 gap-16 items-center">
       <div class="space-y-7">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-green-100 text-mendel-green rounded-full text-[10px] font-black uppercase tracking-widest">
+        <div class="hero-badge inline-flex items-center space-x-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-mendel-green">
           <i class="fa-solid fa-star"></i>
           <span>Formazione interna docenti • PTOF 2025/2026</span>
         </div>
 
         <h2 class="text-5xl md:text-6xl font-black text-slate-900 leading-[0.95] tracking-tighter">
-          L’AI che studia <br><span class="text-mendel-green italic">sui tuoi materiali.</span>
+          L'AI che studia <br><span class="gradient-text italic">sui tuoi materiali.</span>
         </h2>
 
         <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
@@ -322,7 +584,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-10 rounded-[3.5rem] shadow-2xl border border-slate-100">
+      <div class="bg-gradient-to-br from-white to-slate-50 p-10 rounded-[3.5rem] shadow-2xl border border-white/50">
         <h4 class="text-center font-black text-slate-400 text-[10px] uppercase mb-8 tracking-[0.2em]">
           Competenze potenziate (valori indicativi)
         </h4>
@@ -330,12 +592,11 @@
           <canvas id="impactChart"></canvas>
         </div>
         <p class="text-center text-xs text-slate-400 mt-6">
-          Grafico orientativo: l’impatto reale dipende dalla qualità delle fonti caricate e dalle spunte selezionate.
+          Grafico orientativo: l'impatto reale dipende dalla qualità delle fonti caricate.
         </p>
       </div>
     </section>
 
-    <!-- INTRO (ESTESA) -->
     <section id="intro" class="anchor mb-20">
       <div class="text-center mb-12">
         <h3 class="text-4xl font-black tracking-tighter">Introduzione</h3>
@@ -343,25 +604,9 @@
           Cosa fa, cosa non fa, e cosa puoi ottenere subito come docente.
         </p>
       </div>
-<!-- Screenshot interfaccia NotebookLM -->
-<div class="my-12 flex justify-center">
-  <figure class="max-w-5xl w-full">
-  <img 
-  src="Schermata NotebookLM.png"
-  alt="Interfaccia iniziale di NotebookLM: fonti, chat e zona studio"
-  class="rounded-3xl border border-slate-200 shadow-xl cursor-zoom-in"
-  onclick="openZoom(this.src)"
->
 
-    <figcaption class="mt-4 text-center text-sm text-slate-500 italic">
-      Schermata iniziale di NotebookLM: a sinistra le <strong>Fonti</strong>, al centro la <strong>Chat</strong>,
-      a destra la <strong>Zona Studio</strong>.
-    </figcaption>
-  </figure>
-</div>
-<!-- GUIDA AGGIORNATA PASSO PASSO -->
 <section class="max-w-5xl mx-auto my-20">
-  <div class="bg-white rounded-[3rem] border border-slate-200 shadow-xl p-10 space-y-8">
+  <div class="instruction-box border-t-8 border-mendel-green">
 
     <div class="text-center">
       <h3 class="text-3xl font-black tracking-tighter">
@@ -375,20 +620,20 @@
     <div class="text-slate-700 leading-relaxed space-y-6 text-sm">
 
       <p>
-        Immagina NotebookLM come una <strong>“lavatrice intelligente”</strong>:  
+        Immagina NotebookLM come una <strong>"lavatrice intelligente"</strong>:  
         tu inserisci i panni sporchi (documenti grezzi, appunti, idee),
         scegli il programma (riassunto, slide, video)  
-        e l’AI ti restituisce il bucato pulito e stirato
+        e l'AI ti restituisce il bucato pulito e stirato
         (contenuti ordinati, pronti e utilizzabili).
       </p>
 
       <h4 class="font-black text-lg">1. Accesso e creazione del notebook</h4>
       <ul class="list-disc pl-6 space-y-2">
         <li>Vai su <strong>notebooklm.google.com</strong></li>
-        <li>Clicca su <strong>“Nuovo notebook”</strong></li>
+        <li>Clicca su <strong>"Nuovo notebook"</strong></li>
         <li>
           NotebookLM risponde <strong>solo</strong> alle fonti che inserisci tu:
-          questo elimina le “allucinazioni” e crea un perimetro informativo sicuro.
+          questo elimina le "allucinazioni" e crea un perimetro informativo sicuro.
         </li>
       </ul>
 
@@ -416,7 +661,7 @@
         per <strong>scrivere le istruzioni per se stesso</strong>.
       </p>
       <ul class="list-disc pl-6 space-y-2">
-        <li>Chiedi: <em>“Crea un prompt dettagliato per realizzare slide per…”</em></li>
+        <li>Chiedi: <em>"Crea un prompt dettagliato per realizzare slide per…"</em></li>
         <li>Copia il prompt generato</li>
         <li>Usalo per creare il contenuto finale</li>
       </ul>
@@ -440,7 +685,7 @@
 
       <h4 class="font-black text-lg">5. Condivisione: chatbot personalizzato</h4>
       <ul class="list-disc pl-6 space-y-2">
-        <li>Puoi condividere il notebook in modalità “visualizzatore”</li>
+        <li>Puoi condividere il notebook in modalità "visualizzatore"</li>
         <li>
           Chi riceve il link può fare domande,
           ma non vede i file originali
@@ -454,16 +699,16 @@
       <ul class="list-disc pl-6 space-y-2">
         <li>App NotebookLM per iOS e Android</li>
         <li>Flashcard e quiz automatici</li>
-        <li>Studio e ripasso anche fuori dall’aula</li>
+        <li>Studio e ripasso anche fuori dall'aula</li>
       </ul>
 
       <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
         <p class="font-black mb-2">In sintesi</p>
         <ol class="list-decimal pl-6 space-y-1">
           <li>Carichi le fonti</li>
-          <li>Scegli il “detersivo” (prompt)</li>
+          <li>Scegli il "detersivo" (prompt)</li>
           <li>Avvii il programma (slide, video, mappe…)</li>
-          <li>Ottieni un risultato pulito e pronto all’uso</li>
+          <li>Ottieni un risultato pulito e pronto all'uso</li>
         </ol>
       </div>
 
@@ -511,7 +756,7 @@
                     <li>Tu carichi i materiali (fonti)</li>
                     <li>Tu selezioni le fonti attive (spunte)</li>
                     <li>Tu chiedi (chat) oppure scegli una funzione (zona studio)</li>
-                    <li>L’AI produce output <strong>solo</strong> da quelle fonti</li>
+                    <li>L'AI produce output <strong>solo</strong> da quelle fonti</li>
                   </ol>
                 </div>
 
@@ -569,7 +814,7 @@
                 </div>
 
                 <div class="mt-6 p-5 rounded-3xl bg-blue-50 border border-blue-200">
-                  <p class="text-sm font-black text-slate-900 mb-2">Regola d’oro</p>
+                  <p class="text-sm font-black text-slate-900 mb-2">Regola d'oro</p>
                   <p class="text-sm text-slate-700">
                     La qualità dipende dalle <strong>fonti</strong> e dalle <strong>spunte</strong>.
                     Meno fonti (ma mirate) = risultati più precisi e più utili.
@@ -583,7 +828,7 @@
 
         <div class="lg:col-span-5 space-y-6">
           <div class="instruction-box border-t-8 border-slate-900 bg-slate-900 text-white">
-            <h4 class="text-2xl font-black tracking-tighter">Mini-guida: “Cosa carico?”</h4>
+            <h4 class="text-2xl font-black tracking-tighter">Mini-guida: "Cosa carico?"</h4>
             <p class="text-slate-300 mt-2 text-sm leading-relaxed">
               Parti semplice: un solo PDF breve. Poi aggiungi fonti gradualmente.
             </p>
@@ -595,11 +840,11 @@
               </div>
               <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
                 <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-1">Scelta consigliata #2</p>
-                <p class="text-sm text-slate-200">Una verifica dell’anno scorso (per crearne varianti coerenti).</p>
+                <p class="text-sm text-slate-200">Una verifica dell'anno scorso (per crearne varianti coerenti).</p>
               </div>
               <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
                 <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-1">Scelta consigliata #3</p>
-                <p class="text-sm text-slate-200">Un articolo tecnico o un link che vuoi “rendere didattico”.</p>
+                <p class="text-sm text-slate-200">Un articolo tecnico o un link che vuoi "rendere didattico".</p>
               </div>
             </div>
           </div>
@@ -642,7 +887,76 @@
       </div>
     </section>
 
-    <!-- === ADD: MATERIALI DEL CORSO === -->
+    <section id="riassunto" class="anchor mb-24">
+      <div class="text-center mb-12">
+        <h3 class="text-4xl font-black tracking-tighter">Tabella riassuntiva NOTEBOOKLM</h3>
+        <p class="text-slate-500 mt-2 italic">Guida Completa a NotebookLM: Potenzia il tuo Studio e la tua Ricerca con l'IA di Google</p>
+      </div>
+
+      <div class="instruction-box border-t-8 border-mendel-green mb-8">
+        <p class="text-slate-700 leading-relaxed mb-8 text-lg">
+          NotebookLM non è un semplice chatbot, ma un vero e proprio assistente alla ricerca che lavora esclusivamente sui materiali che decidi di fornirgli. Grazie alla tecnologia dei modelli Gemini di Google, permette di trasformare documenti sparsi in un ecosistema di conoscenza strutturato e interrogabile.
+        </p>
+
+        <div class="grid lg:grid-cols-2 gap-8 mb-10">
+          <div class="soft-card">
+            <h4 class="text-xl font-black mb-3 text-slate-900">I Motori dell'Intelligenza: Gemini Flash e Gemini Pro</h4>
+            <p class="text-sm text-slate-600 mb-3">Il cuore di NotebookLM pulsa grazie a due varianti del modello linguistico di Google, ottimizzate per scopi differenti:</p>
+            <ul class="text-sm text-slate-700 space-y-2">
+              <li>• <strong>Gemini Flash:</strong> È il motore predefinito, celebre per la sua velocità e precisione. È ideale per sintetizzare rapidamente grandi volumi di dati e rispondere a domande dirette basandosi sui testi caricati.</li>
+              <li>• <strong>Gemini Pro (Livello Plus/Enterprise):</strong> Disponibile per gli utenti avanzati, questo modello offre una capacità di ragionamento superiore. È perfetto per analisi multidimensionali, flussi di lavoro aziendali complessi e sintesi che richiedono un altissimo grado di elaborazione logica.</li>
+            </ul>
+          </div>
+
+          <div class="soft-card">
+            <h4 class="text-xl font-black mb-3 text-slate-900">Perché utilizzare NotebookLM nella Didattica?</h4>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Per un docente, questo strumento diventa un alleato prezioso per la <strong>creazione di verifiche</strong>, la <strong>sintesi di verbali di riunione</strong> o la preparazione di <strong>dispense interattive</strong> per gli studenti, permettendo di mantenere sempre il controllo totale sulle fonti utilizzate.
+            </p>
+          </div>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="text-2xl font-black mb-4 text-slate-900">Funzionalità Chiave: Molto più di un semplice Riassunto</h4>
+          <p class="text-sm text-slate-600 mb-4">NotebookLM offre una suite di strumenti pensati per chi deve gestire informazioni complesse (come docenti, studenti o ricercatori):</p>
+          <ul class="text-sm text-slate-700 space-y-3">
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-mendel-green mt-1"></i> <span><strong>Gestione Multiformato delle Fonti:</strong> Puoi caricare PDF, Google Docs, trascrizioni audio e persino link a pagine web. Il sistema organizza automaticamente la struttura dei contenuti.</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-mendel-green mt-1"></i> <span><strong>Chat Basata sulla Fonte:</strong> A differenza di altre IA, NotebookLM risponde citando testualmente i passaggi dei tuoi documenti. Questo elimina il rischio di "allucinazioni" e garantisce la massima affidabilità.</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-mendel-green mt-1"></i> <span><strong>Guide di Studio e Mappature:</strong> Il sistema può generare autonomamente cronologie, schemi riassuntivi e mappe concettuali per visualizzare le relazioni tra i diversi argomenti trattati.</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-mendel-green mt-1"></i> <span><strong>Audio Overview e Video Recap:</strong> Trasforma i tuoi appunti in un dialogo audio tra due host IA (ottimo per il ripasso in mobilità) o in brevi video esplicativi con diapositive (disponibile per versioni Plus/Workspace).</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-mendel-green mt-1"></i> <span><strong>Deep Research e Tabelle Dati:</strong> Utilizza agenti intelligenti per cercare riferimenti esterni sul web o estrae dati non strutturati dai tuoi file per organizzarli in tabelle ordinate e pronte per l'esportazione.</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-2xl font-black mb-4 text-slate-900">Come Interrogare il tuo Notebook: Esempi di Prompt</h4>
+          <p class="text-sm text-slate-600 mb-4">Per ottenere i migliori risultati, è fondamentale saper formulare le richieste (prompt) corrette. Ecco alcuni esempi pratici:</p>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <p class="font-black text-slate-900 mb-2 text-sm uppercase tracking-widest text-blue-600">Per la Sintesi e l'Analisi</p>
+              <ul class="text-sm text-slate-600 space-y-2 italic">
+                <li>"Crea un riassunto tematico di 500 parole di queste fonti, includendo le citazioni dirette."</li>
+                <li>"Mostra i punti chiave di questi documenti e indica dove sono in conflitto tra loro."</li>
+              </ul>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <p class="font-black text-slate-900 mb-2 text-sm uppercase tracking-widest text-purple-600">Per la Gestione Operativa</p>
+              <ul class="text-sm text-slate-600 space-y-2 italic">
+                <li>"Estrai le decisioni principali da questi verbali e allega per ciascuna la fonte di riferimento."</li>
+                <li>"Genera un briefing che organizzi il materiale secondo questo schema: Contesto → Punti Critici → Raccomandazioni."</li>
+              </ul>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <p class="font-black text-slate-900 mb-2 text-sm uppercase tracking-widest text-red-600">Per la Formazione e Podcast</p>
+              <ul class="text-sm text-slate-600 space-y-2 italic">
+                <li>"Scrivi uno script per un dialogo a due voci in cui l'Host A spiega i concetti e l'Host B ne mette alla prova la validità ponendo domande difficili."</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <section id="materiali" class="anchor mb-24">
       <div class="text-center mb-12">
         <h3 class="text-4xl font-black tracking-tighter">Materiali del corso (pronti per la prova guidata)</h3>
@@ -658,14 +972,14 @@
                 <h4 class="text-2xl font-black tracking-tighter">Cartella corso</h4>
                 <p class="text-slate-600 mt-2 text-sm leading-relaxed">
                   Inserisci qui i link ai materiali che userai durante la formazione (Drive/OneDrive, slide, PDF esempio).
-                  L’idea: <strong>tutti scaricano lo stesso PDF</strong>, così l’esercitazione è sincronizzata.
+                  L'idea: <strong>tutti scaricano lo stesso PDF</strong>, così l'esercitazione è sincronizzata.
                 </p>
 
                 <div class="mt-5 grid md:grid-cols-2 gap-4">
                   <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
                     <p class="text-xs font-black uppercase tracking-widest text-slate-400">Slide corso</p>
                     <p class="font-black mt-1 text-slate-900"><i class="fa-solid fa-chalkboard-user text-mendel-green mr-2"></i>Presentazione</p>
-                    <p class="text-xs text-slate-500 mt-1">Sostituisci “#” con il link.</p>
+                    <p class="text-xs text-slate-500 mt-1">Sostituisci "#" con il link.</p>
                   </a>
                   <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
                     <p class="text-xs font-black uppercase tracking-widest text-slate-400">PDF starter</p>
@@ -679,15 +993,15 @@
                   </a>
                   <a class="soft-card hover:bg-slate-50 transition" href="#" target="_blank" rel="noopener">
                     <p class="text-xs font-black uppercase tracking-widest text-slate-400">Esempio YouTube</p>
-                    <p class="font-black mt-1 text-slate-900"><i class="fa-brands fa-youtube text-red-600 mr-2"></i>Video “test”</p>
+                    <p class="font-black mt-1 text-slate-900"><i class="fa-brands fa-youtube text-red-600 mr-2"></i>Video "test"</p>
                     <p class="text-xs text-slate-500 mt-1">Link utile da incollare in NotebookLM.</p>
                   </a>
                 </div>
 
                 <div class="mt-6 p-5 rounded-3xl bg-green-50 border border-green-200">
-                  <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Suggerimento “anti-panico”</p>
+                  <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Suggerimento "anti-panico"</p>
                   <p class="text-sm text-slate-700">
-                    Prepara un PDF “facile” (testo chiaro) e un PDF “difficile” (più lungo): durante il corso fai vedere
+                    Prepara un PDF "facile" (testo chiaro) e un PDF "difficile" (più lungo): durante il corso fai vedere
                     come cambiano i risultati quando si spuntano troppe fonti.
                   </p>
                 </div>
@@ -717,14 +1031,13 @@
               <button class="copybtn" type="button" data-copy="script1">
                 <i class="fa-solid fa-copy"></i> Copia
               </button>
-              <pre id="script1">"Oggi useremo NotebookLM come strumento didattico: carichiamo 1 PDF comune, spuntiamo solo quello, generiamo Overview e Mappa, poi creiamo una verifica con soluzioni e citazioni. L’obiettivo non è ‘fare l’AI’, ma risparmiare tempo mantenendo controllo e qualità."</pre>
+              <pre id="script1">"Oggi useremo NotebookLM come strumento didattico: carichiamo 1 PDF comune, spuntiamo solo quello, generiamo Overview e Mappa, poi creiamo una verifica con soluzioni e citazioni. L'obiettivo non è 'fare l'AI', ma risparmiare tempo mantenendo controllo e qualità."</pre>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PRIMO UTILIZZO IN 5 MINUTI -->
     <section id="primo-uso" class="anchor mb-24">
       <div class="text-center mb-12">
         <h3 class="text-4xl font-black tracking-tighter">Primo utilizzo in 5 minuti</h3>
@@ -777,22 +1090,20 @@
       </div>
     </section>
 
-    <!-- INTERFACCIA -->
     <section id="interfaccia" class="anchor mb-24">
       <div class="text-center mb-16">
-        <h3 class="text-4xl font-black tracking-tighter">1. Com’è fatta la schermata (spiegata passo-passo)</h3>
+        <h3 class="text-4xl font-black tracking-tighter">1. Com'è fatta la schermata (spiegata passo-passo)</h3>
         <p class="text-slate-500 mt-2 italic">Tre zone. Se capisci queste, sai usare NotebookLM.</p>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-8">
-        <!-- FONTI -->
         <div class="instruction-box border-t-8 border-red-500">
           <div class="step-badge mb-6" style="background:#ef4444;">1</div>
           <h4 class="text-xl font-black mb-4 uppercase leading-tight">
             Colonna sinistra:<br><span class="text-slate-400">Le Fonti</span>
           </h4>
           <p class="text-sm text-slate-600 mb-6">
-            È la <strong>biblioteca</strong>: qui carichi i materiali. Senza fonti, l’assistente non può lavorare.
+            È la <strong>biblioteca</strong>: qui carichi i materiali. Senza fonti, l'assistente non può lavorare.
           </p>
 
           <ul class="space-y-4 text-xs font-bold text-slate-500">
@@ -806,7 +1117,7 @@
             </li>
             <li class="flex items-start">
               <i class="fa-brands fa-youtube text-red-600 mr-3 mt-1"></i>
-              <span><strong>YouTube</strong>: incolla un link: l’AI trasforma il video in testo analizzabile.</span>
+              <span><strong>YouTube</strong>: incolla un link: l'AI trasforma il video in testo analizzabile.</span>
             </li>
           </ul>
 
@@ -819,7 +1130,6 @@
           </div>
         </div>
 
-        <!-- CHAT -->
         <div class="instruction-box border-t-8 border-blue-500">
           <div class="step-badge mb-6" style="background:#3b82f6;">2</div>
           <h4 class="text-xl font-black mb-4 uppercase leading-tight">
@@ -832,7 +1142,7 @@
           <ul class="space-y-4 text-xs font-bold text-slate-500">
             <li class="flex items-start">
               <i class="fa-solid fa-keyboard text-blue-500 mr-3 mt-1"></i>
-              <span><strong>Barra messaggi</strong>: scrivi richieste semplici (es. “Fai una verifica”).</span>
+              <span><strong>Barra messaggi</strong>: scrivi richieste semplici (es. "Fai una verifica").</span>
             </li>
             <li class="flex items-start">
               <i class="fa-solid fa-quote-left text-blue-500 mr-3 mt-1"></i>
@@ -852,7 +1162,6 @@
           </div>
         </div>
 
-        <!-- ZONA STUDIO -->
         <div class="instruction-box border-t-8 border-mendel-green">
           <div class="step-badge mb-6" style="background:#365314;">3</div>
           <h4 class="text-xl font-black mb-4 uppercase leading-tight">
@@ -895,7 +1204,6 @@
       </div>
     </section>
 
-    <!-- ZONA STUDIO (dettaglio) -->
     <section id="zona-studio" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Zona Studio: spiegazione completa di ogni funzione</h3>
@@ -917,9 +1225,9 @@
             </summary>
             <div class="details-body">
               <p class="text-sm leading-relaxed">
-                L’<strong>Overview</strong> è una panoramica ragionata dell’intero materiale selezionato.
-                Non è un “riassunto corto”: serve per capire <strong>di cosa parla</strong> il materiale
-                e <strong>com’è organizzato</strong>.
+                L'<strong>Overview</strong> è una panoramica ragionata dell'intero materiale selezionato.
+                Non è un "riassunto corto": serve per capire <strong>di cosa parla</strong> il materiale
+                e <strong>com'è organizzato</strong>.
               </p>
 
               <div class="mt-4 grid md:grid-cols-2 gap-4">
@@ -928,14 +1236,14 @@
                   <ul class="text-sm text-slate-700 space-y-1">
                     <li>• capire rapidamente un PDF lungo</li>
                     <li>• decidere cosa spiegare e cosa tagliare</li>
-                    <li>• costruire un’introduzione alla lezione</li>
+                    <li>• costruire un'introduzione alla lezione</li>
                     <li>• individuare concetti essenziali</li>
                   </ul>
                 </div>
                 <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
                   <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Valore didattico</p>
                   <ul class="text-sm text-slate-700 space-y-1">
-                    <li>• utile per studenti che “si perdono”</li>
+                    <li>• utile per studenti che "si perdono"</li>
                     <li>• base per pre-lettura guidata</li>
                     <li>• orientamento per compiti e ripasso</li>
                     <li>• supporto per UDA interdisciplinari</li>
@@ -946,7 +1254,7 @@
               <div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white border border-white/10">
                 <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Esempio pratico</p>
                 <p class="text-sm text-slate-200">
-                  “Uso l’Overview per presentare i nuclei tematici, poi entro nel dettaglio con la spiegazione.”
+                  "Uso l'Overview per presentare i nuclei tematici, poi entro nel dettaglio con la spiegazione."
                 </p>
               </div>
             </div>
@@ -1007,15 +1315,15 @@
             </summary>
             <div class="details-body">
               <p class="text-sm leading-relaxed">
-                L’<strong>Infografica</strong> è una sintesi organizzata in blocchi chiari e leggibili rapidamente.
-                Non è “una bella immagine”: è una <strong>struttura informativa</strong> pronta da copiare in slide o schede.
+                L'<strong>Infografica</strong> è una sintesi organizzata in blocchi chiari e leggibili rapidamente.
+                Non è "una bella immagine": è una <strong>struttura informativa</strong> pronta da copiare in slide o schede.
               </p>
 
               <div class="mt-4 grid md:grid-cols-2 gap-4">
                 <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
                   <p class="text-xs font-black uppercase tracking-widest text-emerald-700 mb-2">A cosa serve al docente</p>
                   <ul class="text-sm text-slate-700 space-y-1">
-                    <li>• creare la “slide finale” di riepilogo</li>
+                    <li>• creare la "slide finale" di riepilogo</li>
                     <li>• produrre schede di ripasso</li>
                     <li>• rendere accessibile un testo denso</li>
                     <li>• preparare compiti di studio</li>
@@ -1035,7 +1343,7 @@
               <div class="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
                 <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Uso consigliato</p>
                 <p class="text-sm text-slate-700">
-                  Prima infografica (visione d’insieme), poi lezione (approfondimento), infine FAQ (ripasso attivo).
+                  Prima infografica (visione d'insieme), poi lezione (approfondimento), infine FAQ (ripasso attivo).
                 </p>
               </div>
             </div>
@@ -1051,7 +1359,7 @@
             </summary>
             <div class="details-body">
               <p class="text-sm leading-relaxed">
-                La funzione <strong>FAQ</strong> genera domande tipiche sull’argomento, con risposte basate sulle fonti.
+                La funzione <strong>FAQ</strong> genera domande tipiche sull'argomento, con risposte basate sulle fonti.
                 È perfetta per <strong>ripasso attivo</strong>, recupero e interrogazioni.
               </p>
 
@@ -1079,7 +1387,7 @@
               <div class="mt-4 p-4 rounded-2xl bg-white border border-slate-200">
                 <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Modalità pronta per la classe</p>
                 <p class="text-sm text-slate-700">
-                  Proietta le FAQ: prima rispondono gli studenti, poi confrontate con l’output e la citazione.
+                  Proietta le FAQ: prima rispondono gli studenti, poi confrontate con l'output e la citazione.
                 </p>
               </div>
             </div>
@@ -1096,7 +1404,7 @@
             <div class="details-body">
               <p class="text-sm leading-relaxed">
                 La <strong>Guida allo studio</strong> organizza il materiale in un percorso: cosa studiare prima, cosa dopo,
-                su cosa concentrarsi. È un supporto concreto per studenti che non sanno “da dove partire”.
+                su cosa concentrarsi. È un supporto concreto per studenti che non sanno "da dove partire".
               </p>
 
               <div class="mt-4 grid md:grid-cols-2 gap-4">
@@ -1123,7 +1431,7 @@
               <div class="mt-4 p-4 rounded-2xl bg-slate-900 text-white border border-white/10">
                 <p class="text-xs font-black uppercase tracking-widest text-mendel-green mb-2">Uso docente consigliato</p>
                 <p class="text-sm text-slate-200">
-                  Personalizza la guida: aggiungi “cosa chiederò all’interrogazione” e “errori tipici da evitare”.
+                  Personalizza la guida: aggiungi "cosa chiederò all'interrogazione" e "errori tipici da evitare".
                 </p>
               </div>
             </div>
@@ -1187,7 +1495,85 @@
       </div>
     </section>
 
-    <!-- TEMPLATE PROMPT UNIVERSALI -->
+    <section id="presentazioni" class="anchor mb-24">
+      <div class="text-center mb-16">
+        <h3 class="text-4xl font-black tracking-tighter">Creazione di Presentazioni con NotebookLM</h3>
+        <p class="text-slate-500 mt-2">NotebookLM ha introdotto la possibilità di generare presentazioni (slide) direttamente dalle fonti caricate in un taccuino.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 mb-8">
+        <div class="instruction-box border-t-8 border-mendel-green">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#365314;">1</div>
+            <div>
+              <h4 class="text-2xl font-black tracking-tighter mb-2">Accesso e personalizzazione</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Per ottenere il miglior risultato, non è consigliabile generare la presentazione immediatamente con il comando di default. È invece preferibile utilizzare l'icona della <strong>"matita" (modifica)</strong> che consente di personalizzare l'output prima della generazione.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-blue-600">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#2563eb;">2</div>
+            <div>
+              <h4 class="text-2xl font-black tracking-tighter mb-2">Parametri configurabili</h4>
+              <p class="text-sm text-slate-600 mb-3">Nel menu di personalizzazione è possibile impostare diverse variabili:</p>
+              <ul class="text-sm text-slate-600 space-y-2">
+                <li>• <strong>Lingua:</strong> È possibile specificare la lingua di output (es. italiano).</li>
+                <li>• <strong>Lunghezza:</strong> Si può selezionare la lunghezza desiderata.</li>
+                <li>• <strong>Tipologia di contenuto:</strong> È possibile scegliere tra stili diversi.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 mb-8">
+        <div class="instruction-box border-t-8 border-purple-600">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#9333ea;">3</div>
+            <div>
+              <h4 class="text-2xl font-black tracking-tighter mb-2">L'importanza del Prompt (Istruzioni)</h4>
+              <p class="text-sm text-slate-600 mb-3">La qualità del risultato dipende significativamente dalle istruzioni fornite:</p>
+              <ul class="text-sm text-slate-600 space-y-2">
+                <li>• <strong>Target:</strong> A chi è rivolta la lezione</li>
+                <li>• <strong>Obiettivo:</strong> Lo scopo della presentazione</li>
+                <li>• <strong>Struttura:</strong> Il numero di slide desiderato</li>
+                <li>• <strong>Stile visivo:</strong> Colori predominanti</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="instruction-box border-t-8 border-orange-500">
+          <div class="flex items-start gap-4">
+            <div class="step-badge" style="background:#f97316;">4</div>
+            <div>
+              <h4 class="text-2xl font-black tracking-tighter mb-2">Caratteristiche dell'Output</h4>
+              <p class="text-sm text-slate-600 mb-3">Le presentazioni generate includono:</p>
+              <ul class="text-sm text-slate-600 space-y-2">
+                <li>• <strong>Immagini generate dall'IA:</strong> Immagini evocative e di alta qualità</li>
+                <li>• <strong>Elementi didattici:</strong> Domande guida per la classe</li>
+                <li>• <strong>Aderenza alle fonti:</strong> Contenuti con riferimenti</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="instruction-box border-t-8 border-slate-900 bg-slate-50">
+        <h4 class="text-xl font-black tracking-tighter mb-3 text-slate-900"><i class="fa-solid fa-circle-info text-blue-600 mr-2"></i> Nota sulle Infografiche</h4>
+        <p class="text-sm text-slate-700 mb-4">
+          Oltre alle presentazioni, è possibile generare infografiche riassuntive. Tuttavia, il testo all'interno delle infografiche non è direttamente editabile in NotebookLM.
+        </p>
+        <div class="p-4 bg-white border border-slate-200 rounded-xl">
+          <p class="text-sm text-slate-700"><strong>💡 Soluzione pratica:</strong> Per correggere eventuali refusi puoi scaricare il file e importarlo in strumenti esterni come <strong>Canva</strong>.</p>
+        </div>
+      </div>
+    </section>
+
     <section id="template-prompt" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Template prompt universali (3 livelli)</h3>
@@ -1237,7 +1623,7 @@
                 <button class="copybtn" type="button" data-copy="pa">
                   <i class="fa-solid fa-copy"></i> Copia
                 </button>
-                <pre id="pa">"Progetta un’attività (compito autentico) basata solo su queste fonti: obiettivi, consegna, fasi, materiali, tempi, prodotto finale. Includi una rubrica di valutazione (4 livelli) e cita le fonti usate."</pre>
+                <pre id="pa">"Progetta un'attività (compito autentico) basata solo su queste fonti: obiettivi, consegna, fasi, materiali, tempi, prodotto finale. Includi una rubrica di valutazione (4 livelli) e cita le fonti usate."</pre>
               </div>
             </div>
           </div>
@@ -1245,14 +1631,12 @@
       </div>
     </section>
 
-    <!-- PRONTUARIO PROMPT PER MATERIA -->
     <section id="prompt" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">2. Prontuario prompt per materia</h3>
-        <p class="text-slate-500 mt-2">Basato sulla programmazione PTOF dell’IIS Mendel. Copia e incolla nella chat.</p>
+        <p class="text-slate-500 mt-2">Basato sulla programmazione PTOF dell'IIS Mendel. Copia e incolla nella chat.</p>
       </div>
 
-      <!-- Linguaggi -->
       <div class="mb-12">
         <h4 class="category-title"><i class="fa-solid fa-language text-blue-600"></i> Area Linguaggi</h4>
         <div class="grid md:grid-cols-3 gap-6">
@@ -1271,7 +1655,6 @@
         </div>
       </div>
 
-      <!-- Scientifico -->
       <div class="mb-12">
         <h4 class="category-title"><i class="fa-solid fa-flask-vial text-purple-600"></i> Area Scientifico-Matematica</h4>
         <div class="grid md:grid-cols-3 gap-6">
@@ -1290,7 +1673,6 @@
         </div>
       </div>
 
-      <!-- Tecnico Agraria -->
       <div class="mb-12">
         <h4 class="category-title"><i class="fa-solid fa-wheat-awn text-mendel-green"></i> Area Tecnico-Agraria</h4>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1313,7 +1695,6 @@
         </div>
       </div>
 
-      <!-- Professionale -->
       <div class="mb-12">
         <h4 class="category-title"><i class="fa-solid fa-briefcase text-orange-600"></i> Professionale (quinte)</h4>
         <div class="grid md:grid-cols-3 gap-6">
@@ -1332,7 +1713,6 @@
         </div>
       </div>
 
-      <!-- Trasversali -->
       <div class="mb-12">
         <h4 class="category-title"><i class="fa-solid fa-star-of-life text-red-600"></i> PCTO / Civica</h4>
         <div class="grid md:grid-cols-2 gap-8">
@@ -1354,7 +1734,6 @@
       </div>
     </section>
 
-    <!-- RICETTE DIDATTICHE PRONTE -->
     <section id="ricette" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Ricette didattiche pronte (zero improvvisazione)</h3>
@@ -1383,7 +1762,7 @@
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li><strong>Obiettivo:</strong> verifica coerente con fonti</li>
             <li><strong>Fonti:</strong> capitolo + eventuale scheda (spuntati)</li>
-            <li><strong>Zona Studio:</strong> FAQ (per vedere le domande “tipiche”)</li>
+            <li><strong>Zona Studio:</strong> FAQ (per vedere le domande "tipiche")</li>
             <li><strong>Chat:</strong> quiz + soluzioni</li>
           </ul>
           <div class="copywrap mt-4">
@@ -1409,11 +1788,10 @@
       </div>
     </section>
 
-    <!-- ERRORI TIPICI + SOLUZIONI -->
     <section id="errori" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Problemi comuni e soluzioni immediate</h3>
-        <p class="text-slate-500 mt-2">Prima di pensare “non funziona”, controlla questi 4 punti.</p>
+        <p class="text-slate-500 mt-2">Prima di pensare "non funziona", controlla questi 4 punti.</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
@@ -1422,7 +1800,7 @@
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li>• riduci le fonti spuntate</li>
             <li>• chiedi un formato (tabella / elenco / livelli)</li>
-            <li>• restringi l’argomento (capitolo/paragrafo)</li>
+            <li>• restringi l'argomento (capitolo/paragrafo)</li>
           </ul>
         </div>
 
@@ -1430,7 +1808,7 @@
           <h4 class="text-2xl font-black tracking-tighter">Citazioni assenti o poco chiare</h4>
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li>• verifica che il PDF sia testo selezionabile (non scansione)</li>
-            <li>• prova a caricare una versione “testo” del documento</li>
+            <li>• prova a caricare una versione "testo" del documento</li>
             <li>• limita le fonti e riprova</li>
           </ul>
         </div>
@@ -1439,13 +1817,13 @@
           <h4 class="text-2xl font-black tracking-tighter">Risultati confusi / contraddittori</h4>
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li>• hai fonti diverse con definizioni diverse: separale</li>
-            <li>• lavora “a blocchi”: una fonte alla volta</li>
-            <li>• usa prima Overview per capire cosa c’è dentro</li>
+            <li>• lavora "a blocchi": una fonte alla volta</li>
+            <li>• usa prima Overview per capire cosa c'è dentro</li>
           </ul>
         </div>
 
         <div class="instruction-box border-t-8 border-mendel-green">
-          <h4 class="text-2xl font-black tracking-tighter">Troppo tempo perso a “scrivere bene”</h4>
+          <h4 class="text-2xl font-black tracking-tighter">Troppo tempo perso a "scrivere bene"</h4>
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li>• inizia dalla Zona Studio (output automatici)</li>
             <li>• usa i template prompt universali</li>
@@ -1455,70 +1833,7 @@
       </div>
     </section>
 
-    <!-- FAQ / PROBLEMI COMUNI -->
-<section id="problemi" class="anchor mb-24">
-  <div class="max-w-5xl mx-auto">
-
-    <h2 class="text-4xl font-black mb-12 text-center tracking-tighter">
-      Problemi comuni e soluzioni
-    </h2>
-
-    <div class="grid md:grid-cols-2 gap-8">
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Le risposte sono troppo generiche</h3>
-        <p class="text-sm text-slate-600">
-          Controlla di aver selezionato solo le fonti davvero rilevanti.
-          Troppe fonti attive confondono l’output.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Non vedo le citazioni</h3>
-        <p class="text-sm text-slate-600">
-          Il documento potrebbe essere una scansione non leggibile.
-          Usa PDF con testo selezionabile.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Le risposte non sono precise</h3>
-        <p class="text-sm text-slate-600">
-          Dividi il materiale in blocchi più piccoli
-          (un capitolo o un argomento alla volta).
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Non so cosa chiedere</h3>
-        <p class="text-sm text-slate-600">
-          Usa prima la Zona Studio (overview, mappe, FAQ)
-          e solo dopo passa alla Chat.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Ho paura di “sbagliare”</h3>
-        <p class="text-sm text-slate-600">
-          NotebookLM non modifica né cancella i tuoi file.
-          Puoi sperimentare in totale sicurezza.
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        <h3 class="font-black mb-2">❓ Posso usarlo con gli studenti?</h3>
-        <p class="text-sm text-slate-600">
-          Sì, soprattutto come strumento di supporto allo studio,
-          ripasso e inclusione (BES / DSA).
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-    <!-- INCLUSIONE BES/DSA -->
-      <section id="inclusione" class="anchor mb-24">
+    <section id="inclusione" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Inclusione BES/DSA: uso operativo</h3>
         <p class="text-slate-500 mt-2">Strumenti e prompt pronti per ridurre carico cognitivo e aumentare autonomia.</p>
@@ -1526,7 +1841,7 @@
 
       <div class="grid lg:grid-cols-2 gap-8">
         <div class="instruction-box border-t-8 border-mendel-green">
-          <h4 class="text-2xl font-black tracking-tighter">Pacchetto “studio guidato”</h4>
+          <h4 class="text-2xl font-black tracking-tighter">Pacchetto "studio guidato"</h4>
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
             <li><strong>1)</strong> Zona Studio → Overview (orientamento)</li>
             <li><strong>2)</strong> Zona Studio → Mappa concettuale (struttura)</li>
@@ -1541,7 +1856,7 @@
         </div>
 
         <div class="instruction-box border-t-8 border-blue-600">
-          <h4 class="text-2xl font-black tracking-tighter">Tre output “didattici” consigliati</h4>
+          <h4 class="text-2xl font-black tracking-tighter">Tre output "didattici" consigliati</h4>
           <div class="grid gap-4 mt-4">
             <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
               <p class="font-black text-slate-900">1) Tabella a due colonne</p>
@@ -1549,10 +1864,10 @@
             </div>
             <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
               <p class="font-black text-slate-900">2) Sequenza in 5 passi</p>
-              <p class="text-sm text-slate-700 mt-1">Processi/procedure: “prima… poi… quindi…”.</p>
+              <p class="text-sm text-slate-700 mt-1">Processi/procedure: "prima… poi… quindi…".</p>
             </div>
             <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
-              <p class="font-black text-slate-900">3) Domande “facili → medie”</p>
+              <p class="font-black text-slate-900">3) Domande "facili → medie"</p>
               <p class="text-sm text-slate-700 mt-1">Costruisce fiducia e metodo, non solo controllo.</p>
             </div>
           </div>
@@ -1560,7 +1875,6 @@
       </div>
     </section>
 
-    <!-- PRIVACY -->
     <section id="privacy" class="anchor mb-24">
       <div class="text-center mb-16">
         <h3 class="text-4xl font-black tracking-tighter">Privacy e buone pratiche (scuola)</h3>
@@ -1571,7 +1885,7 @@
         <div class="instruction-box border-t-8 border-slate-900">
           <h4 class="text-2xl font-black tracking-tighter">Cosa evitare</h4>
           <ul class="text-sm text-slate-700 mt-3 space-y-2">
-            <li>• non caricare dati personali degli studenti (nomi, certificazioni, valutazioni, PEI/PDP, ecc.)</li>
+            <li>• non caricare dati personali degli studenti</li>
             <li>• non caricare documenti sensibili non necessari</li>
             <li>• evitare materiali non autorizzati o con copyright non gestito</li>
           </ul>
@@ -1583,40 +1897,38 @@
             <li>• materiali autoprodotti e documenti di istituto</li>
             <li>• estratti di testo realmente utili (mirati)</li>
             <li>• fonti chiare e leggibili (testo selezionabile)</li>
-            <li>• lavorare per “blocchi” (capitoli/argomenti) per migliorare qualità</li>
+            <li>• lavorare per "blocchi" (capitoli/argomenti)</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- CHIUSURA -->
-          <p class="text-xs text-slate-400 uppercase font-black tracking-widest">Supporto Tecnico IIS Mendel - Villa Cortese</p>
+    <div class="text-center py-12">
+      <p class="text-xs text-slate-400 uppercase font-black tracking-widest mb-4">Supporto Tecnico IIS Mendel - Villa Cortese</p>
       <h4 class="text-2xl font-black">Pronto per iniziare?</h4>
       <p class="text-slate-500 max-w-lg mx-auto">
-        Parti da un PDF breve, usa la Zona Studio e poi passa alla Chat. Salva le risposte migliori come note: diventano la tua “cassetta degli attrezzi” didattica.
+        Parti da un PDF breve, usa la Zona Studio e poi passa alla Chat. Salva le risposte migliori come note: diventano la tua "cassetta degli attrezzi" didattica.
       </p>
     </div>
 
   </main>
 
-  <!-- FOOTER -->
-  <footer class="bg-slate-900 text-white py-16 border-t border-mendel-green/30">
-    <div class="container mx-auto px-6 text-center">
+  <footer class="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-16 border-t border-mendel-green/30 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-green-900/10 to-transparent"></div>
+    <div class="container mx-auto px-6 text-center relative z-10">
       <div class="flex justify-center mb-8">
-        <div class="bg-mendel-green p-4 rounded-3xl text-white">
+        <div class="bg-gradient-to-br from-mendel-green to-green-700 p-4 rounded-3xl text-white shadow-2xl float-animation">
           <i class="fa-solid fa-graduation-cap text-4xl"></i>
         </div>
       </div>
       <p class="text-xl font-black uppercase tracking-widest mb-2">IIS Gregorio Mendel</p>
-      <p class="text-xs text-slate-500 uppercase font-bold tracking-[0.3em] mb-8">Villa Cortese - Milano</p>
+      <p class="text-xs text-slate-400 uppercase font-bold tracking-[0.3em] mb-8">Villa Cortese - Milano</p>
       <div class="h-px bg-white/10 w-24 mx-auto mb-8"></div>
       <p class="text-xs text-slate-400">Guida realizzata da Massimiliano Crespi</p>
     </div>
   </footer>
 
-  <!-- JS: Chart + Copy buttons + ScrollSpy + BackToTop -->
   <script>
-    // Radar chart + Copy buttons
     window.addEventListener("load", () => {
       const canvas = document.getElementById("impactChart");
       if (canvas) {
@@ -1628,13 +1940,15 @@
             datasets: [{
               label: "Impatto NotebookLM",
               data: [95, 85, 90, 100, 80, 95],
-              backgroundColor: "rgba(54, 83, 20, 0.18)",
+              backgroundColor: "rgba(54, 83, 20, 0.2)",
               borderColor: "#365314",
               borderWidth: 3,
               pointBackgroundColor: "#365314",
               pointBorderColor: "#ffffff",
               pointHoverBackgroundColor: "#ffffff",
-              pointHoverBorderColor: "#365314"
+              pointHoverBorderColor: "#365314",
+              pointRadius: 6,
+              pointHoverRadius: 8
             }]
           },
           options: {
@@ -1677,7 +1991,6 @@
         });
       });
 
-      // === ScrollSpy (sidebar) ===
       const spyLinks = Array.from(document.querySelectorAll('.sidebar a[data-spy]'));
       const sectionIds = spyLinks.map(a => a.getAttribute('data-spy'));
       const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
@@ -1688,7 +2001,6 @@
         });
       }
 
-      // Use IntersectionObserver when available
       if ('IntersectionObserver' in window && sections.length) {
         const io = new IntersectionObserver((entries) => {
           const visible = entries
@@ -1698,19 +2010,8 @@
         }, { root: null, threshold: [0.15, 0.25, 0.35, 0.5] });
 
         sections.forEach(s => io.observe(s));
-      } else {
-        // Fallback: on scroll
-        window.addEventListener('scroll', () => {
-          const y = window.scrollY + 140;
-          let current = sections[0]?.id;
-          for (const s of sections) {
-            if (s.offsetTop <= y) current = s.id;
-          }
-          if (current) setActive(current);
-        }, { passive: true });
       }
 
-      // Smooth scroll for sidebar links
       spyLinks.forEach(a => {
         a.addEventListener('click', (e) => {
           const id = a.getAttribute('data-spy');
@@ -1722,7 +2023,6 @@
         });
       });
 
-      // === Back to top button ===
       const toTop = document.getElementById('toTop');
       function toggleToTop() {
         if (!toTop) return;
@@ -1738,43 +2038,6 @@
       }
     });
   </script>
-<!-- MODALE ZOOM IMMAGINE -->
-<div id="imgZoomModal"
-     class="fixed inset-0 bg-black/90 hidden z-[9999] flex items-center justify-center p-4"
-     onclick="closeZoom()">
-
-  <img id="imgZoom"
-       class="max-w-[95vw] max-h-[95vh] rounded-2xl shadow-2xl border border-white/20 cursor-zoom-out"
-       onclick="closeZoom(); event.stopPropagation()"
-
-</div>
-
-<script>
-  // Funzioni GLOBALI (devono stare su window per funzionare con onclick="")
-  window.openZoom = function(src) {
-    const modal = document.getElementById('imgZoomModal');
-    const img = document.getElementById('imgZoom');
-    if (!modal || !img) return;
-
-    img.src = src;
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-
-  window.closeZoom = function() {
-    const modal = document.getElementById('imgZoomModal');
-    if (!modal) return;
-
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  // Chiudi con ESC
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') window.closeZoom();
-  });
-</script>
-
 
 </body>
 </html>
