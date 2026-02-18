@@ -290,12 +290,10 @@
 
 <body class="antialiased">
 
-  <!-- Background blobs -->
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
 
-  <!-- ═══════════════════════════════════════════════════════ NAV -->
   <nav class="glass-header sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-3">
       <div class="flex items-center space-x-3">
@@ -311,6 +309,7 @@
       </div>
       <div class="flex flex-wrap items-center justify-center gap-1.5">
         <a href="#intro" class="pill"><i class="fa-solid fa-compass"></i> Intro</a>
+        <a href="#workspace" class="pill"><i class="fa-solid fa-cloud"></i> Workspace</a>
         <a href="#riassunto" class="pill"><i class="fa-solid fa-table"></i> Riassunto</a>
         <a href="#materiali" class="pill"><i class="fa-solid fa-folder-open"></i> Materiali</a>
         <a href="#primo-uso" class="pill"><i class="fa-solid fa-rocket"></i> Primo uso</a>
@@ -342,7 +341,6 @@
 
   <main class="container mx-auto px-4 py-12 max-w-7xl">
 
-    <!-- ═══════════════════════════════════════════════════════ HERO -->
     <section class="mb-20 reveal">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div class="space-y-7">
@@ -365,7 +363,6 @@
             <span class="kpi"><i class="fa-solid fa-bolt text-amber-500"></i> Gratuito</span>
           </div>
         </div>
-        <!-- Radar chart card -->
         <div class="glow-card">
           <div class="glow-card-inner">
             <h4 class="text-center font-black text-slate-400 text-[10px] uppercase mb-6 tracking-[.2em]">Competenze potenziate (valori indicativi)</h4>
@@ -378,7 +375,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ STATS BANNER -->
     <section class="mb-20 reveal">
       <div class="glow-card">
         <div class="glow-card-inner grid grid-cols-2 md:grid-cols-4 gap-8 text-center py-4">
@@ -402,7 +398,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ INTRO -->
     <section id="intro" class="anchor mb-20 reveal">
       <div class="text-center mb-12">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -412,7 +407,6 @@
         <p class="text-slate-500 mt-2 italic">Cosa fa, cosa non fa, e cosa puoi ottenere subito come docente.</p>
       </div>
 
-      <!-- Screenshot -->
       <div class="my-10 flex justify-center">
         <figure class="max-w-5xl w-full">
           <img src="Schermata NotebookLM.png"
@@ -425,7 +419,6 @@
         </figure>
       </div>
 
-      <!-- Guida passo-passo -->
       <div class="max-w-5xl mx-auto mb-12">
         <div class="glass-card border-t-8 border-mendel-green">
           <div class="text-center mb-8">
@@ -434,10 +427,9 @@
           </div>
           <div class="space-y-6 text-sm text-slate-700 leading-relaxed">
             <div class="highlight-box">
-              <p><strong>"NotebookLM fa una cosa sola, ma la fa bene: prende i materiali che già usi e li trasforma in strumenti pronti all'uso. Non aggiunge nulla di suo, non naviga su internet, non inventa. Lavora solo su quello che gli dai tu.</p>
+              <p><strong>"NotebookLM fa una cosa sola, ma la fa bene: prende i materiali che già usi e li trasforma in strumenti pronti all'uso. Non aggiunge nulla di suo, non naviga su internet, non inventa. Lavora solo su quello che gli dai tu."</strong></p>
             </div>
 
-            <!-- Timeline steps -->
             <div style="position:relative;">
               <div class="timeline-line"></div>
               <div class="timeline-item">
@@ -475,10 +467,8 @@
         </div>
       </div>
 
-      <!-- 3 colonne intro -->
       <div class="grid lg:grid-cols-12 gap-8 items-start">
         <div class="lg:col-span-7 space-y-6">
-          <!-- Card A -->
           <div class="glass-card border-t-8 border-mendel-green">
             <div class="flex items-start gap-4">
               <div class="step-badge" style="background:linear-gradient(135deg,#365314,#22c55e);">A</div>
@@ -518,7 +508,6 @@
             </div>
           </div>
 
-          <!-- Card B -->
           <div class="glass-card border-t-8 border-blue-600">
             <div class="flex items-start gap-4">
               <div class="step-badge" style="background:linear-gradient(135deg,#2563eb,#60a5fa);">B</div>
@@ -564,7 +553,6 @@
         </div>
 
         <div class="lg:col-span-5 space-y-6">
-          <!-- Mini-guida cosa caricare -->
           <div class="glass-card border-t-8 border-slate-900" style="background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;">
             <h4 class="text-2xl font-black tracking-tighter">Mini-guida: "Cosa carico?"</h4>
             <p class="text-slate-300 mt-2 text-sm">Parti semplice: un solo PDF breve. Poi aggiungi fonti gradualmente.</p>
@@ -584,7 +572,6 @@
             </div>
           </div>
 
-          <!-- ChatGPT vs NotebookLM -->
           <div class="glass-card border-t-8" style="border-top-color:#854D0E;">
             <h4 class="text-2xl font-black tracking-tighter">ChatGPT vs NotebookLM</h4>
             <div class="overflow-x-auto mt-4">
@@ -608,7 +595,42 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ RIASSUNTO -->
+    <section id="workspace" class="anchor mb-20 reveal">
+      <div class="text-center mb-12">
+        <div class="section-tag bg-blue-50 text-blue-700 border border-blue-200 mb-4 mx-auto w-fit">
+          <i class="fa-solid fa-cloud"></i> Google Workspace
+        </div>
+        <h3 class="text-4xl font-black tracking-tighter">Integrazione Istituzionale</h3>
+        <p class="text-slate-500 mt-2 italic">NotebookLM come pilastro della didattica nell'ecosistema scolastico.</p>
+      </div>
+      <div class="glow-card" style="background: linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6);">
+        <div class="glow-card-inner">
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="flex-shrink-0 bg-blue-50 p-6 rounded-3xl shadow-inner">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Google_Classroom_Logo.png" alt="Google Classroom" class="w-16 h-16 object-contain">
+            </div>
+            <div>
+              <div class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black uppercase mb-3">Integrazione 2026</div>
+              <h4 class="text-2xl font-black tracking-tighter mb-3">Un pilastro di Google Workspace for Education</h4>
+              <p class="text-slate-700 leading-relaxed text-sm">
+                NotebookLM è ormai parte integrante della suite <strong>Google Workspace</strong> dell'IIS Mendel. Google lo riconosce ufficialmente come componente fondamentale per la didattica aumentata, progettato per potenziare il pensiero critico e supportare il lavoro quotidiano del docente, tutelando la privacy dei dati.
+              </p>
+              <div class="mt-6 grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+                  <p class="font-black text-sm text-blue-800"><i class="fa-solid fa-chalkboard-user mr-2"></i>Presenza in Classroom</p>
+                  <p class="text-xs text-slate-600 mt-1">Lo trovi direttamente tra gli strumenti di <strong>Google Classroom</strong>. Puoi importare materiali dai tuoi corsi e condividere notebook con gli studenti in un ambiente protetto e centralizzato.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+                  <p class="font-black text-sm text-blue-800"><i class="fa-solid fa-shield-check mr-2"></i>Dati protetti</p>
+                  <p class="text-xs text-slate-600 mt-1">L'uso con l'account @agrariomendel.it assicura che i dati non vengano usati per addestrare i modelli IA pubblici, garantendo la totale privacy di docenti e studenti.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="riassunto" class="anchor mb-20 reveal">
       <div class="text-center mb-12">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -674,7 +696,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ MATERIALI -->
     <section id="materiali" class="anchor mb-20 reveal">
       <div class="text-center mb-12">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -740,7 +761,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ PRIMO USO -->
     <section id="primo-uso" class="anchor mb-20 reveal">
       <div class="text-center mb-12">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -791,7 +811,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ INTERFACCIA -->
     <section id="interfaccia" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -801,7 +820,6 @@
         <p class="text-slate-500 mt-2 italic">Tre zone. Se capisci queste, sai usare NotebookLM.</p>
       </div>
       <div class="grid lg:grid-cols-3 gap-8">
-        <!-- Fonti -->
         <div class="glass-card border-t-8 border-red-500">
           <div class="step-badge mb-5" style="background:linear-gradient(135deg,#ef4444,#fb7185);">1</div>
           <h4 class="text-xl font-black mb-3 uppercase">Colonna sinistra:<br><span class="text-slate-400">Le Fonti</span></h4>
@@ -816,7 +834,6 @@
             <p class="text-sm text-slate-700">Spunta <strong>solo</strong> le fonti utili per quella lezione. Meno fonti = risposta più centrata.</p>
           </div>
         </div>
-        <!-- Chat -->
         <div class="glass-card border-t-8 border-blue-500">
           <div class="step-badge mb-5" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);">2</div>
           <h4 class="text-xl font-black mb-3 uppercase">Zona centrale:<br><span class="text-slate-400">La Chat</span></h4>
@@ -831,7 +848,6 @@
             <p class="text-sm text-slate-700">Se la risposta è generica: riduci le fonti spuntate o chiedi un formato più specifico (tabella, elenco, livelli).</p>
           </div>
         </div>
-        <!-- Zona Studio -->
         <div class="glass-card border-t-8 border-mendel-green">
           <div class="step-badge mb-5" style="background:linear-gradient(135deg,#365314,#22c55e);">3</div>
           <h4 class="text-xl font-black mb-3 uppercase">In alto / destra:<br><span class="text-slate-400">Zona Studio</span></h4>
@@ -852,7 +868,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ ZONA STUDIO -->
     <section id="zona-studio" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -963,7 +978,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ AUDIO/VIDEO OVERVIEW (NEW) -->
     <section id="audio-video" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-indigo-50 text-indigo-700 border border-indigo-200 mb-4 mx-auto w-fit">
@@ -973,9 +987,8 @@
         <p class="text-slate-500 mt-2 italic">I tuoi materiali diventano podcast e video spiegati da due host virtuali.</p>
       </div>
       <div class="grid lg:grid-cols-2 gap-8 mb-8">
-        <!-- Audio Overview -->
-        <div class="glow-card" style="background:linear-gradient(135deg,#312e81,#4338ca,#6366f1);">
-          <div class="glow-card-inner">
+        <div class="glow-card h-full flex flex-col" style="background:linear-gradient(135deg,#312e81,#4338ca,#6366f1);">
+          <div class="glow-card-inner flex-1">
             <div class="feature-icon" style="background:linear-gradient(135deg,#312e81,#4f46e5); color:#fff;">
               <i class="fa-solid fa-headphones"></i>
             </div>
@@ -1011,9 +1024,8 @@
           </div>
         </div>
 
-        <!-- Video Overview -->
-        <div class="glow-card glow-card-blue">
-          <div class="glow-card-inner">
+        <div class="glow-card glow-card-blue h-full flex flex-col">
+          <div class="glow-card-inner flex-1">
             <div class="feature-icon" style="background:linear-gradient(135deg,#7f1d1d,#dc2626); color:#fff;">
               <i class="fa-solid fa-video"></i>
             </div>
@@ -1053,7 +1065,6 @@
         </div>
       </div>
 
-      <!-- Tips audio/video -->
       <div class="glass-card border-t-8 border-indigo-600">
         <h4 class="text-xl font-black tracking-tighter mb-4"><i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i>Consigli pratici per Audio e Video Overview</h4>
         <div class="grid md:grid-cols-3 gap-4 text-sm">
@@ -1073,7 +1084,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ PRESENTAZIONI -->
     <section id="presentazioni" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1142,7 +1152,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ DEEP RESEARCH (NEW) -->
     <section id="deep-research" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-amber-50 text-amber-700 border border-amber-200 mb-4 mx-auto w-fit">
@@ -1154,7 +1163,6 @@
       <div class="glow-card glow-card-orange">
         <div class="glow-card-inner">
 
-          <!-- PERCORSO UI -->
           <div class="mb-8 p-5 rounded-3xl" style="background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff;">
             <p class="text-xs font-black uppercase tracking-widest text-amber-400 mb-3"><i class="fa-solid fa-map-pin mr-2"></i>Come arrivarci — percorso esatto nell'interfaccia</p>
             <div class="flex flex-wrap items-center gap-2 text-sm font-bold">
@@ -1218,7 +1226,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ TABELLA DATI -->
     <section id="tabella-dati" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1254,7 +1261,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ TEMPLATE PROMPT -->
     <section id="template-prompt" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1270,7 +1276,7 @@
             <div class="w-full">
               <p class="font-black">Sintesi chiara + parole chiave</p>
               <p class="text-sm text-slate-600 mt-1">Perfetta per spiegare e ripassare.</p>
-              <div class="copywrap mt-4"><button class="copybtn" type="button" data-copy="pb"><i class="fa-solid fa-copy"></i> Copia</button><pre id="pb">"Riassumi le fonti spuntate in 8–12 punti chiave. Poi crea un elenco di 10 parole chiave con definizione breve, citando le fonti."</pre></div>
+              <div class="copywrap mt-4"><button class="copybtn" type="button" data-copy="pb"><i class="fa-solid fa-copy"></i> Copia</button><pre id="pb">"Riassumi le fonti spuntate in 8–12 punti chiave. Poi crea un elenco di 10 parole chiave con definitione breve, citando le fonti."</pre></div>
             </div>
           </div>
         </div>
@@ -1297,7 +1303,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ PROMPT PER MATERIA -->
     <section id="prompt" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1336,7 +1341,7 @@
       </div>
 
       <div class="mb-10">
-        <h4 class="category-title"><i class="fa-solid fa-briefcase text-orange-600"></i> Professionale (quinte)</h4>
+        <h4 class="category-title"><i class="fa-solid fa-briefcase text-orange-600"></i> Quinte</h4>
         <div class="grid md:grid-cols-3 gap-6">
           <div class="prompt-card" style="border-left-color:#f97316;"><p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Valorizzazione Prodotti</p><p class="text-sm italic">"Riassumi le certificazioni citate nelle fonti e crea 8 domande vero/falso con correzione e citazioni."</p></div>
           <div class="prompt-card" style="border-left-color:#f97316;"><p class="text-[10px] font-black text-slate-400 mb-2 uppercase">Ecologia / Pedologia</p><p class="text-sm italic">"Organizza in tabella: 'tecnica', 'vantaggi', 'limiti' basandoti sulle fonti spuntate."</p></div>
@@ -1353,7 +1358,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ RICETTE -->
     <section id="ricette" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1394,12 +1398,11 @@
             <li><strong>Zona Studio:</strong> Mappa → Guida allo studio</li>
             <li><strong>Chat:</strong> versione semplificata + domande</li>
           </ul>
-          <div class="copywrap mt-4"><button class="copybtn" type="button" data-copy="r3"><i class="fa-solid fa-copy"></i> Copia</button><pre id="r3">"Riformula questo contenuto in versione semplificata (frasi brevi). Poi crea: 10 parole chiave con definizione + 10 domande graduate (facili→medie) con soluzioni e citazioni."</pre></div>
+          <div class="copywrap mt-4"><button class="copybtn" type="button" data-copy="r3"><i class="fa-solid fa-copy"></i> Copia</button><pre id="r3">"Riformula questo contenuto in versione semplificata (frasi brevi). Poi crea: 10 parole chiave con definitione + 10 domande graduate (facili→medie) con soluzioni e citazioni."</pre></div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ APP MOBILE (NEW) -->
     <section id="mobile" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-blue-50 text-blue-700 border border-blue-200 mb-4 mx-auto w-fit">
@@ -1447,7 +1450,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ CONDIVISIONE (NEW) -->
     <section id="condivisione" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1467,7 +1469,7 @@
           </div>
         </div>
         <div class="glass-card border-t-8 border-blue-600">
-          <div class="feature-icon" style="background:linear-gradient(135deg,#2563eb,#60a5fa); color:#fff;"><i class="fa-solid fa-users"></i></div>
+          <div class="feature-icon" style="background:linear-gradient(135deg,#2563eb,#60a5fa); color:#fff;"><i class="fa-users fa-solid"></i></div>
           <h4 class="text-xl font-black tracking-tighter mb-3">Modalità Collaboratore</h4>
           <p class="text-sm text-slate-700 leading-relaxed">I collaboratori possono <strong>aggiungere fonti e creare note</strong>. Utile per team di docenti che lavorano sulla stessa UDA o per progetti interdisciplinari.</p>
           <div class="highlight-box-blue mt-4">
@@ -1487,7 +1489,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ PROBLEMI -->
     <section id="errori" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-red-50 text-red-700 border border-red-200 mb-4 mx-auto w-fit">
@@ -1550,7 +1551,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ INCLUSIONE -->
     <section id="inclusione" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-green-50 text-mendel-green border border-green-200 mb-4 mx-auto w-fit">
@@ -1570,7 +1570,7 @@
           </ul>
           <div class="copywrap mt-5">
             <button class="copybtn" type="button" data-copy="bes1"><i class="fa-solid fa-copy"></i> Copia</button>
-            <pre id="bes1">"Crea una versione semplificata del contenuto (frasi brevi, lessico essenziale). Poi produci: (a) elenco parole chiave con definizione, (b) 10 domande di comprensione graduate con soluzioni, (c) mini-scheda di ripasso in 6 punti, citando le fonti."</pre>
+            <pre id="bes1">"Crea una versione semplificata del contenuto (frasi brevi, lessico essenziale). Poi produci: (a) elenco parole chiave con definitione, (b) 10 domande di comprensione graduate con soluzioni, (c) mini-scheda di ripasso in 6 punti, citando le fonti."</pre>
           </div>
         </div>
         <div class="glass-card border-t-8 border-blue-600">
@@ -1584,7 +1584,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════ PRIVACY -->
     <section id="privacy" class="anchor mb-20 reveal">
       <div class="text-center mb-14">
         <div class="section-tag bg-slate-100 text-slate-700 border border-slate-200 mb-4 mx-auto w-fit">
@@ -1613,7 +1612,6 @@
           </ul>
         </div>
       </div>
-      <!-- Nota Google Workspace -->
       <div class="glass-card border-t-8 border-blue-500 mt-8">
         <h4 class="text-xl font-black mb-3"><i class="fa-brands fa-google text-blue-600 mr-2"></i>NotebookLM e Google Workspace for Education</h4>
         <p class="text-sm text-slate-700 mb-4">Se la scuola usa <strong>Google Workspace for Education</strong>, i dati rimangono all'interno del dominio scolastico e sono soggetti alle policy GDPR di Google for Education — un livello di protezione aggiuntivo rispetto agli account personali.</p>
@@ -1624,7 +1622,6 @@
       </div>
     </section>
 
-    <!-- CTA finale -->
     <div class="text-center py-14 reveal">
       <div class="glow-card inline-block max-w-2xl w-full">
         <div class="glow-card-inner">
@@ -1642,7 +1639,6 @@
     </div>
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════ FOOTER -->
   <footer style="background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff;" class="py-16 relative overflow-hidden">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(34,197,94,.08),transparent 60%);pointer-events:none;"></div>
     <div class="container mx-auto px-6 text-center relative z-10">
@@ -1658,7 +1654,6 @@
     </div>
   </footer>
 
-  <!-- Zoom modal -->
   <div id="imgZoomModal" onclick="closeZoom()" style="position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;z-index:9999;align-items:center;justify-content:center;padding:1rem;">
     <img id="imgZoom" style="max-width:95vw;max-height:95vh;border-radius:1.5rem;box-shadow:0 40px 100px rgba(0,0,0,.5);cursor:zoom-out;" onclick="event.stopPropagation();closeZoom()">
   </div>
